@@ -27,19 +27,19 @@
 <meta property="og:site_name" content="Sanwu">
 <meta property="og:description" content="EleasticSearch Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java语言开发的，并作为Apache许可条款下的开放源码发布，是一种流行的企业级搜索引擎。  在ElasticSearch中有四个相关的概念：  索引 Index  类型 Type（7.X版本更新后被">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png">
-<meta property="og:image" content="http://example.com/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png">
-<meta property="og:image" content="http://example.com/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png">
-<meta property="og:image" content="http://example.com/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png">
-<meta property="og:image" content="http://example.com/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png">
-<meta property="og:image" content="http://example.com/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png">
-<meta property="og:image" content="http://example.com/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png">
+<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png">
+<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png">
+<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png">
+<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png">
+<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png">
+<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png">
+<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png">
 <meta property="article:published_time" content="2021-06-19T18:09:27.000Z">
 <meta property="article:modified_time" content="2021-06-19T18:27:27.080Z">
 <meta property="article:author" content="Sanwu">
 <meta property="article:tag" content="NetWork">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png">
+<meta name="twitter:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png">
 
 
 <link rel="canonical" href="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/">
@@ -237,20 +237,20 @@
 </li>
 </ol>
 <p>我们可以将其类比到关系型数据库中，索引就是一个数据库，类型就是一张数据表，而文档就是数据表中的一行，字段就是数据表中的一列，如下图：</p>
-<p><img src="/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png" alt="title"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png" alt="title"></p>
 <p>实际使用相关</p>
 <p>0x00创建</p>
 <p>创建索引使用PUT方式提交，路径为索引名称（名称必须为小写）</p>
-<p><img src="/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png" alt="index"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png" alt="index"></p>
 <p>创建Documents使用post方法在索引后连接”_doc”或”_create”来创建（后接字符为指定id，其中_create必须后接id）</p>
-<p><img src="/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png" alt="doc"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png" alt="doc"></p>
 <p>0x01查询</p>
-<p><img src="/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png" alt="select"></p>
-<p><img src="/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png" alt="select2"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png" alt="select"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png" alt="select2"></p>
 <p>0x02更新</p>
 <p>对于全量更新，可使用PUT或POST，但是局部更新必须使用POST（返回的幂等性原理）</p>
-<p><img src="/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png" alt="update"></p>
-<p><img src="/.com//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png" alt="update2"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png" alt="update"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png" alt="update2"></p>
 <p>删除将请求方法改为DELETE即可。</p>
 
     </div>
