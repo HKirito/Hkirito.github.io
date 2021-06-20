@@ -20,36 +20,34 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="EleasticSearch Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java语言开发的，并作为Apache许可条款下的开放源码发布，是一种流行的企业级搜索引擎。  在ElasticSearch中有四个相关的概念：  索引 Index  类型 Type（7.X版本更新后被">
+<meta name="description" content="shiro及漏洞复现首先了解漏洞原理及利用方式，漏洞CVE为 CVE-2016-4437其次，在shiro内的序列化处理中，将rememberMe字段的数据未做处理校验，开始直接存储和反序列化操作。导致RCE及任意代码执行。 准备：使用vulhub_app的shiro的docker环境，如下：  登录时的数据包及逻辑如下  对于此字段rememberMe的反序列化利用链路如下： ysoserial">
 <meta property="og:type" content="article">
-<meta property="og:title" content="EleasticSearch简单应用">
-<meta property="og:url" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:title" content="shiro漏洞及复现RCE利用">
+<meta property="og:url" content="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/index.html">
 <meta property="og:site_name" content="Sanwu">
-<meta property="og:description" content="EleasticSearch Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java语言开发的，并作为Apache许可条款下的开放源码发布，是一种流行的企业级搜索引擎。  在ElasticSearch中有四个相关的概念：  索引 Index  类型 Type（7.X版本更新后被">
+<meta property="og:description" content="shiro及漏洞复现首先了解漏洞原理及利用方式，漏洞CVE为 CVE-2016-4437其次，在shiro内的序列化处理中，将rememberMe字段的数据未做处理校验，开始直接存储和反序列化操作。导致RCE及任意代码执行。 准备：使用vulhub_app的shiro的docker环境，如下：  登录时的数据包及逻辑如下  对于此字段rememberMe的反序列化利用链路如下： ysoserial">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png">
-<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png">
-<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png">
-<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png">
-<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png">
-<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png">
-<meta property="og:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png">
-<meta property="article:published_time" content="2021-06-19T18:09:27.000Z">
-<meta property="article:modified_time" content="2021-06-19T18:27:27.080Z">
+<meta property="og:image" content="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png">
+<meta property="og:image" content="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png">
+<meta property="og:image" content="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png">
+<meta property="og:image" content="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png">
+<meta property="og:image" content="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png">
+<meta property="article:published_time" content="2021-06-20T11:18:13.000Z">
+<meta property="article:modified_time" content="2021-06-20T11:20:48.433Z">
 <meta property="article:author" content="Sanwu">
-<meta property="article:tag" content="NetWork">
+<meta property="article:tag" content="Network_Safety">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png">
+<meta name="twitter:image" content="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png">
 
 
-<link rel="canonical" href="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/">
+<link rel="canonical" href="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/","path":"2021/06/20/EleasticSearch简单应用/","title":"EleasticSearch简单应用"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/","path":"2021/06/20/shiro漏洞及复现RCE利用/","title":"shiro漏洞及复现RCE利用"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>EleasticSearch简单应用 | Sanwu</title>
+<title>shiro漏洞及复现RCE利用 | Sanwu</title>
   
 
 
@@ -116,7 +114,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EleasticSearch"><span class="nav-number">1.</span> <span class="nav-text">EleasticSearch</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#shiro%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">shiro及漏洞复现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CVE-2016-4437"><span class="nav-number">2.</span> <span class="nav-text">CVE-2016-4437</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -179,7 +177,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -192,7 +190,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          EleasticSearch简单应用
+          shiro漏洞及复现RCE利用
         </h1>
 
         <div class="post-meta-container">
@@ -204,16 +202,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2021-06-20 02:09:27 / Modified: 02:27:27" itemprop="dateCreated datePublished" datetime="2021-06-20T02:09:27+08:00">2021-06-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Software/" itemprop="url" rel="index"><span itemprop="name">Software</span></a>
-        </span>
+      <time title="Created: 2021-06-20 19:18:13 / Modified: 19:20:48" itemprop="dateCreated datePublished" datetime="2021-06-20T19:18:13+08:00">2021-06-20</time>
     </span>
 
   
@@ -226,36 +215,20 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h1 id="EleasticSearch"><a href="#EleasticSearch" class="headerlink" title="EleasticSearch"></a>EleasticSearch</h1><blockquote>
-<p>Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java语言开发的，并作为Apache许可条款下的开放源码发布，是一种流行的企业级搜索引擎。</p>
-</blockquote>
-<p>在ElasticSearch中有四个相关的概念：</p>
-<ol>
-<li><p>索引 Index</p>
-</li>
-<li><p>类型 Type（7.X版本更新后被弃用）</p>
-</li>
-<li><p>文档 Documents</p>
-</li>
-<li><p>字段 Fields</p>
-</li>
-</ol>
-<p>我们可以将其类比到关系型数据库中，索引就是一个数据库，类型就是一张数据表，而文档就是数据表中的一行，字段就是数据表中的一列，如下图：</p>
-<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png" alt="title"></p>
-<p>实际使用相关</p>
-<p>0x00创建</p>
-<p>创建索引使用PUT方式提交，路径为索引名称（名称必须为小写）</p>
-<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png" alt="index"></p>
-<p>创建Documents使用post方法在索引后连接”_doc”或”_create”来创建（后接字符为指定id，其中_create必须后接id）</p>
-<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png" alt="doc"></p>
-<p>0x01查询</p>
-<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png" alt="select"></p>
-<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png" alt="select2"></p>
-<p>0x02更新</p>
-<p>对于全量更新，可使用PUT或POST，但是局部更新必须使用POST（返回的幂等性原理）</p>
-<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png" alt="update"></p>
-<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png" alt="update2"></p>
-<p>删除将请求方法改为DELETE即可。</p>
+        <h1 id="shiro及漏洞复现"><a href="#shiro及漏洞复现" class="headerlink" title="shiro及漏洞复现"></a>shiro及漏洞复现</h1><p>首先了解漏洞原理及利用方式，漏洞CVE为</p>
+<h1 id="CVE-2016-4437"><a href="#CVE-2016-4437" class="headerlink" title="CVE-2016-4437"></a>CVE-2016-4437</h1><p>其次，在shiro内的序列化处理中，将rememberMe字段的数据未做处理校验，开始直接存储和反序列化操作。导致RCE及任意代码执行。</p>
+<p>准备：使用vulhub_app的shiro的docker环境，如下：</p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png" alt="环境"></p>
+<p>登录时的数据包及逻辑如下</p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png" alt="登录数据包"></p>
+<p>对于此字段rememberMe的反序列化利用链路如下：</p>
+<p>ysoserial将命令进行序列化，然后将此命令所在的机器使用JRMP来搭建远程加载使用类。将远程利用类执行命令进行AES及Base64加密的方式将命令加载生成Cookie，替换原有的rememberMe的cookie进行RCE。</p>
+<p>复现过程：</p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png" alt="复现"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png" alt="复现2"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png" alt="复现3"></p>
+<p>Tips：from Crypto.Cipher import AES导入报错时：pip install  crypto pycrypto pycryptodome</p>
+<p>仍报错时可进入到pip的site-package内将crypto重命名为Crypto即可。</p>
 
     </div>
 
@@ -264,19 +237,19 @@
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Network-Safety/" rel="tag"># Network_Safety</a>
+          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/" rel="prev" title="Nginx 关键字优先级排序分析">
-                  <i class="fa fa-chevron-left"></i> Nginx 关键字优先级排序分析
+                <a href="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/" rel="prev" title="EleasticSearch简单应用">
+                  <i class="fa fa-chevron-left"></i> EleasticSearch简单应用
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/" rel="next" title="shiro漏洞及复现RCE利用">
-                  shiro漏洞及复现RCE利用 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
