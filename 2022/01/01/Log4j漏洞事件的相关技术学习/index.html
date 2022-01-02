@@ -27,13 +27,13 @@
 <meta property="og:site_name" content="Sanwu">
 <meta property="og:description" content="Log4j漏洞事件的相关技术学习1.漏洞影响范围12345Apache Log4j 2.xApache旗下相关附属产品，如 Apache Struts2、Apache Solr、Apache Druid、Apache Flink目前截止官方发布版本Log4j 2.17.0   2.漏洞原理1Log4j中存在的JNDI Lookup原本是想提供给开发者能从远程服务器上接受相关配置及记录功能的，但是由">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://hkirito.github.io/.io//01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/image.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/image.png">
 <meta property="article:published_time" content="2021-12-31T18:09:27.000Z">
-<meta property="article:modified_time" content="2022-01-02T12:59:37.278Z">
+<meta property="article:modified_time" content="2022-01-02T13:31:03.909Z">
 <meta property="article:author" content="Sanwu">
 <meta property="article:tag" content="NetWork">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://hkirito.github.io/.io//01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/image.png">
+<meta name="twitter:image" content="http://hkirito.github.io/2022/01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/image.png">
 
 
 <link rel="canonical" href="http://hkirito.github.io/2022/01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/">
@@ -200,7 +200,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-01-02 20:59:37" itemprop="dateModified" datetime="2022-01-02T20:59:37+08:00">2022-01-02</time>
+        <time title="Modified: 2022-01-02 21:31:03" itemprop="dateModified" datetime="2022-01-02T21:31:03+08:00">2022-01-02</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
 
 <p>源代码很简单，就是一个启动Logger并尝试让Logger记录一个错误的过程。</p>
 <p>然后需要先启动一个恶意的JNDI的服务器，让后续的错误记录那一步可以调用到远程服务器上的命令即可完成远程命令执行。如下图</p>
-<p><img src="/.io//01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/image.png" alt="复现"></p>
+<p><img src="/2022/01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/image.png" alt="复现"></p>
 <ul>
 <li>打码为了文章能活得久一点</li>
 </ul>

@@ -192,7 +192,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-01-02 20:59:37" itemprop="dateModified" datetime="2022-01-02T20:59:37+08:00">2022-01-02</time>
+        <time title="Modified: 2022-01-02 21:31:03" itemprop="dateModified" datetime="2022-01-02T21:31:03+08:00">2022-01-02</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -225,7 +225,7 @@
 
 <p>源代码很简单，就是一个启动Logger并尝试让Logger记录一个错误的过程。</p>
 <p>然后需要先启动一个恶意的JNDI的服务器，让后续的错误记录那一步可以调用到远程服务器上的命令即可完成远程命令执行。如下图</p>
-<p><img src="/.io//01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/image.png" alt="复现"></p>
+<p><img src="/2022/01/01/Log4j%E6%BC%8F%E6%B4%9E%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/image.png" alt="复现"></p>
 <ul>
 <li>打码为了文章能活得久一点</li>
 </ul>
@@ -394,8 +394,8 @@
 <h3 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># PS：说一下几个可能碰到的问题，</span></span><br><span class="line"><span class="comment"># 1.“唉，为啥我在虚拟机里面（docker里面）启动的kafka为啥局域网内拿python连不上啊？”</span></span><br><span class="line">答：“因为这玩意默认是本地localhost运行的，你要在config/server.properties内修改配置（看下图）“</span><br><span class="line"><span class="comment"># 2.&quot;唉，为啥我的kafka链接不了zookeeper啊？&quot;</span></span><br><span class="line">答：“你看下你的zookeeper启动在哪里，然后在config/server.properties内修改配置（同样看下图）”</span><br><span class="line"><span class="comment"># 3.&quot;md,sb博主，为啥我的topic删除不了？骗子！？？&quot;</span></span><br><span class="line">答：“你需要配置auto.create.topics.enable = <span class="literal">false</span>和delete.topic.enable=<span class="literal">true</span>” </span><br></pre></td></tr></table></figure>
 
 
-<p><img src="/.io//07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image.png" alt="配置1"></p>
-<p><img src="/.io//07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image_1.png" alt="配置2"></p>
+<p><img src="/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image.png" alt="配置1"></p>
+<p><img src="/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image_1.png" alt="配置2"></p>
 <p>贴上我自己测试的python链接脚本，先启动消费者然后启动生产者</p>
 <p>Producer.py</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> KafkaProducer</span><br><span class="line"><span class="keyword">from</span> kafka.errors <span class="keyword">import</span> kafka_errors</span><br><span class="line"></span><br><span class="line">producer = KafkaProducer(</span><br><span class="line">    bootstrap_servers=[<span class="string">&#x27;zookeeper_server:port&#x27;</span>],</span><br><span class="line">    key_serializer=<span class="keyword">lambda</span> k: json.dumps(k).encode(),</span><br><span class="line">    value_serializer=<span class="keyword">lambda</span> v: json.dumps(v).encode())</span><br><span class="line"><span class="built_in">print</span> (producer.config)</span><br><span class="line">msg_dict = &#123;</span><br><span class="line">    <span class="string">&quot;sleep_time&quot;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&quot;db_config&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;database&quot;</span>: <span class="string">&quot;test_1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;host&quot;</span>: <span class="string">&quot;xxxx&quot;</span>,</span><br><span class="line">        <span class="string">&quot;user&quot;</span>: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">        <span class="string">&quot;password&quot;</span>: <span class="string">&quot;root&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;table&quot;</span>: <span class="string">&quot;msg&quot;</span>,</span><br><span class="line">    <span class="string">&quot;msg&quot;</span>: <span class="string">&quot;Hello World&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">msg2_dict = <span class="string">&quot;hahahahhahaha&quot;</span></span><br><span class="line"></span><br><span class="line">msg = json.dumps(msg_dict)</span><br><span class="line">futruer = producer.send(<span class="string">&quot;kafka_demo&quot;</span>, key=<span class="string">&#x27;count_num&#x27;</span>, value=msg_dict, partition=<span class="literal">None</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">   futruer.get(timeout=<span class="number">20</span>)</span><br><span class="line"><span class="keyword">except</span> kafka_errors: <span class="comment"># 发送失败抛出kafka_errors</span></span><br><span class="line">    traceback.format_exc()</span><br></pre></td></tr></table></figure>
@@ -488,9 +488,9 @@
     <div class="post-body" itemprop="articleBody">
           <h4 id="Spring-Data-Command"><a href="#Spring-Data-Command" class="headerlink" title="Spring Data Command"></a>Spring Data Command</h4><p>利用Java的反射机制对username这个类进行获取，然后利用这个类进行命令执行，主要的点在于</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username[<span class="comment">#this.getClass().forName(&quot;java.lang.Runtime&quot;).getRuntime().exec(&quot;touch /tmp/success&quot;)]=&amp;password=&amp;repeatedPassword=</span></span><br></pre></td></tr></table></figure>
-<p><img src="/.io//07/05/Spring-Data-Commons%E8%BF%9C%E7%A8%8BRCE-CVE-2018-1273/cuts1.png" alt="界面"></p>
-<p><img src="/.io//07/05/Spring-Data-Commons%E8%BF%9C%E7%A8%8BRCE-CVE-2018-1273/cuts.png" alt="抓包"></p>
-<p><img src="/.io//cuts4" alt="结果">.png)</p>
+<p><img src="/2021/07/05/Spring-Data-Commons%E8%BF%9C%E7%A8%8BRCE-CVE-2018-1273/cuts1.png" alt="界面"></p>
+<p><img src="/2021/07/05/Spring-Data-Commons%E8%BF%9C%E7%A8%8BRCE-CVE-2018-1273/cuts.png" alt="抓包"></p>
+<p><img src="/cuts4" alt="结果">.png)</p>
 <p>尝试过命令输出重定向，但是失败了。原因是因为java的getruntime().exec()执行命令时并不会将命令输出及相关内容重定向，只有一个单纯的执行一条命令的功能。命令执行权限为运行服务器的用户权限执行。</p>
 
       
@@ -650,15 +650,15 @@
           <h1 id="shiro及漏洞复现"><a href="#shiro及漏洞复现" class="headerlink" title="shiro及漏洞复现"></a>shiro及漏洞复现</h1><p>首先了解漏洞原理及利用方式，漏洞CVE为</p>
 <h1 id="CVE-2016-4437"><a href="#CVE-2016-4437" class="headerlink" title="CVE-2016-4437"></a>CVE-2016-4437</h1><p>其次，在shiro内的序列化处理中，将rememberMe字段的数据未做处理校验，开始直接存储和反序列化操作。导致RCE及任意代码执行。</p>
 <p>准备：使用vulhub_app的shiro的docker环境，如下：</p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png" alt="环境"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png" alt="环境"></p>
 <p>登录时的数据包及逻辑如下</p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png" alt="登录数据包"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png" alt="登录数据包"></p>
 <p>对于此字段rememberMe的反序列化利用链路如下：</p>
 <p>ysoserial将命令进行序列化，然后将此命令所在的机器使用JRMP来搭建远程加载使用类。将远程利用类执行命令进行AES及Base64加密的方式将命令加载生成Cookie，替换原有的rememberMe的cookie进行RCE。</p>
 <p>复现过程：</p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png" alt="复现"></p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png" alt="复现2"></p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png" alt="复现3"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png" alt="复现"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png" alt="复现2"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png" alt="复现3"></p>
 <p>Tips：from Crypto.Cipher import AES导入报错时：pip install  crypto pycrypto pycryptodome</p>
 <p>仍报错时可进入到pip的site-package内将crypto重命名为Crypto即可。</p>
 
@@ -749,20 +749,20 @@
 </li>
 </ol>
 <p>我们可以将其类比到关系型数据库中，索引就是一个数据库，类型就是一张数据表，而文档就是数据表中的一行，字段就是数据表中的一列，如下图：</p>
-<p><img src="/.io//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png" alt="title"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png" alt="title"></p>
 <p>实际使用相关</p>
 <p>0x00创建</p>
 <p>创建索引使用PUT方式提交，路径为索引名称（名称必须为小写）</p>
-<p><img src="/.io//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png" alt="index"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png" alt="index"></p>
 <p>创建Documents使用post方法在索引后连接”_doc”或”_create”来创建（后接字符为指定id，其中_create必须后接id）</p>
-<p><img src="/.io//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png" alt="doc"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png" alt="doc"></p>
 <p>0x01查询</p>
-<p><img src="/.io//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png" alt="select"></p>
-<p><img src="/.io//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png" alt="select2"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png" alt="select"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png" alt="select2"></p>
 <p>0x02更新</p>
 <p>对于全量更新，可使用PUT或POST，但是局部更新必须使用POST（返回的幂等性原理）</p>
-<p><img src="/.io//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png" alt="update"></p>
-<p><img src="/.io//06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png" alt="update2"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png" alt="update"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png" alt="update2"></p>
 <p>删除将请求方法改为DELETE即可。</p>
 
       

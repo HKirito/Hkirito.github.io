@@ -27,17 +27,17 @@
 <meta property="og:site_name" content="Sanwu">
 <meta property="og:description" content="shiro及漏洞复现首先了解漏洞原理及利用方式，漏洞CVE为 CVE-2016-4437其次，在shiro内的序列化处理中，将rememberMe字段的数据未做处理校验，开始直接存储和反序列化操作。导致RCE及任意代码执行。 准备：使用vulhub_app的shiro的docker环境，如下：  登录时的数据包及逻辑如下  对于此字段rememberMe的反序列化利用链路如下： ysoserial">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://hkirito.github.io/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png">
-<meta property="og:image" content="http://hkirito.github.io/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png">
-<meta property="og:image" content="http://hkirito.github.io/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png">
-<meta property="og:image" content="http://hkirito.github.io/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png">
-<meta property="og:image" content="http://hkirito.github.io/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png">
+<meta property="og:image" content="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png">
+<meta property="og:image" content="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png">
+<meta property="og:image" content="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png">
+<meta property="og:image" content="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png">
+<meta property="og:image" content="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png">
 <meta property="article:published_time" content="2021-06-20T11:18:13.000Z">
 <meta property="article:modified_time" content="2021-06-20T11:29:58.718Z">
 <meta property="article:author" content="Sanwu">
 <meta property="article:tag" content="NetWork">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://hkirito.github.io/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png">
+<meta name="twitter:image" content="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png">
 
 
 <link rel="canonical" href="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/">
@@ -223,15 +223,15 @@
         <h1 id="shiro及漏洞复现"><a href="#shiro及漏洞复现" class="headerlink" title="shiro及漏洞复现"></a>shiro及漏洞复现</h1><p>首先了解漏洞原理及利用方式，漏洞CVE为</p>
 <h1 id="CVE-2016-4437"><a href="#CVE-2016-4437" class="headerlink" title="CVE-2016-4437"></a>CVE-2016-4437</h1><p>其次，在shiro内的序列化处理中，将rememberMe字段的数据未做处理校验，开始直接存储和反序列化操作。导致RCE及任意代码执行。</p>
 <p>准备：使用vulhub_app的shiro的docker环境，如下：</p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png" alt="环境"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png" alt="环境"></p>
 <p>登录时的数据包及逻辑如下</p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png" alt="登录数据包"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png" alt="登录数据包"></p>
 <p>对于此字段rememberMe的反序列化利用链路如下：</p>
 <p>ysoserial将命令进行序列化，然后将此命令所在的机器使用JRMP来搭建远程加载使用类。将远程利用类执行命令进行AES及Base64加密的方式将命令加载生成Cookie，替换原有的rememberMe的cookie进行RCE。</p>
 <p>复现过程：</p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png" alt="复现"></p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png" alt="复现2"></p>
-<p><img src="/.io//06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png" alt="复现3"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png" alt="复现"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png" alt="复现2"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png" alt="复现3"></p>
 <p>Tips：from Crypto.Cipher import AES导入报错时：pip install  crypto pycrypto pycryptodome</p>
 <p>仍报错时可进入到pip的site-package内将crypto重命名为Crypto即可。</p>
 
