@@ -19,11 +19,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hkirito.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 <meta name="description" content="Nginx配置缓存优先级nginx的location配置nginx location语法规则：location [&#x3D;||*|^~] &#x2F;uri&#x2F; { … }nginx的location匹配的变量是$uri    符号 说明    &#x3D; 表示精确匹配   ^~ 表示uri以指定字符或字符串开头   ~ 表示区分大小写的正则匹配   ~* 表示不区分大小写的正则匹配   &#x2F; 通用匹配，任何请求都会匹配到">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nginx 关键字优先级排序分析">
-<meta property="og:url" content="http://example.com/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/index.html">
+<meta property="og:url" content="http://hkirito.github.io/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Sanwu">
 <meta property="og:description" content="Nginx配置缓存优先级nginx的location配置nginx location语法规则：location [&#x3D;||*|^~] &#x2F;uri&#x2F; { … }nginx的location匹配的变量是$uri    符号 说明    &#x3D; 表示精确匹配   ^~ 表示uri以指定字符或字符串开头   ~ 表示区分大小写的正则匹配   ~* 表示不区分大小写的正则匹配   &#x2F; 通用匹配，任何请求都会匹配到">
 <meta property="og:locale" content="en_US">
@@ -34,11 +34,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/">
+<link rel="canonical" href="http://hkirito.github.io/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/","path":"2021/06/20/Nginx-关键字优先级排序分析/","title":"Nginx 关键字优先级排序分析"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://hkirito.github.io/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/","path":"2021/06/20/Nginx-关键字优先级排序分析/","title":"Nginx 关键字优先级排序分析"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Nginx 关键字优先级排序分析 | Sanwu</title>
@@ -167,7 +167,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2021/06/20/Nginx-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
