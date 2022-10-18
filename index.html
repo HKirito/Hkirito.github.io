@@ -272,6 +272,13 @@
 
       <time title="Created: 2022-06-21 17:16:04" itemprop="dateCreated datePublished" datetime="2022-06-21T17:16:04+08:00">2022-06-21</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2022-10-18 16:22:19" itemprop="dateModified" datetime="2022-10-18T16:22:19+08:00">2022-10-18</time>
+      </span>
 
   
 </div>
@@ -283,7 +290,29 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          
+          <p>基于v1.3.6版本</p>
+<h2 id="一、主机安全配置"><a href="#一、主机安全配置" class="headerlink" title="一、主机安全配置"></a>一、主机安全配置</h2><h3 id="1-1、Linux主机配置检测"><a href="#1-1、Linux主机配置检测" class="headerlink" title="1.1、Linux主机配置检测"></a>1.1、Linux主机配置检测</h3><h4 id="1-1-1、为容器创建一个单独的分区"><a href="#1-1-1、为容器创建一个单独的分区" class="headerlink" title="1.1.1、为容器创建一个单独的分区"></a>1.1.1、为容器创建一个单独的分区</h4><p>  默认情况下所有的容器存储在/var/lib/docker目录下，当其写满时，会造成Docker甚至主机无法使用，因此，建议为Docker创建新的分区。若已安装，建议使用LVM创建分区。</p>
+<p>  修复：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">配置 docker data 数据挂载点，修改后重载守护进程以及重新docker服务。</span><br><span class="line">$ vim /etc/docker/daemon.json</span><br><span class="line"># 在json格式的 &#123;&#125; 中加入如下字段及内容。</span><br><span class="line"><span class="string">&quot;data-root&quot;</span>: <span class="string">&quot;/test/docker&quot;</span>,</span><br><span class="line">$ systemctl daemon-reload &amp;&amp; systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-2、确保只允许受信任的用户控制Docker守护进程"><a href="#1-1-2、确保只允许受信任的用户控制Docker守护进程" class="headerlink" title="1.1.2、确保只允许受信任的用户控制Docker守护进程"></a>1.1.2、确保只允许受信任的用户控制Docker守护进程</h4><p>  此项会列出所有有权限使用Docker的普通用户，请确保其是符合你的期望。若需要添加或删除，请使用以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从 docker 组中删除任何不受信任的用户</span></span><br><span class="line">sudo gpasswd -d &lt;your-user&gt; docker </span><br><span class="line"></span><br><span class="line"><span class="comment"># 将受信任的用户添加到 docker 组</span></span><br><span class="line">sudo usermod -aG docker &lt;your-user&gt; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-3、确保为-Docker-守护程序配置审计"><a href="#1-1-3、确保为-Docker-守护程序配置审计" class="headerlink" title="1.1.3、确保为 Docker 守护程序配置审计"></a>1.1.3、确保为 Docker 守护程序配置审计</h4><p>  将Docker守护程序用audit工具审计</p>
+<p>  修复：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在/etc/audit/rules.d/audit.rules文件中写入</span></span><br><span class="line">-w /usr/bin/dockerd -k Docker_daemon</span><br><span class="line"><span class="comment"># 然后auditctl -R /etc/audit/rules.d/audit.rules重载规则</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-4、确保为-Docker-文件和目录配置审计-run-containerd"><a href="#1-1-4、确保为-Docker-文件和目录配置审计-run-containerd" class="headerlink" title="1.1.4、确保为 Docker 文件和目录配置审计 -/run/containerd"></a>1.1.4、确保为 Docker 文件和目录配置审计 -/run/containerd</h4><p>  将容器文件及目录用audit工具审计</p>
+<p>  修复：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在/etc/audit/rules.d/audit.rules文件中写入</span></span><br><span class="line">-w /run/containerd -k Docker_containerd</span><br><span class="line"><span class="comment"># 然后auditctl -R /etc/audit/rules.d/audit.rules重载规则</span></span><br></pre></td></tr></table></figure>
+
+<p>1.1.5-1.1.18、确保为 Docker 文件和目录配置审计 - /var/lib/docker等</p>
+<p>  以下审计规则文件</p>
+<p>  修复：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
       
     </div>
 
