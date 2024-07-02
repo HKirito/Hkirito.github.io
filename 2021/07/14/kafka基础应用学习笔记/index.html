@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hkirito.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="kafka基础应用学习笔记 kafka：一种非常流行的消息中间件人话：可以用这个框架解决消息在服务间传递的格式化及速度等问题，那么为什么要这么做呢？答：因为快，而且方便。  解释kafka中的专业术语（个人理解）123456789Producer：消息的生产者，消息从生产者传递至kafka处理 （做饭的）Consumer：消息的消费者，把消息从kafka中拿出（吃饭的）Consumer Group">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafka基础应用学习笔记">
+<meta property="og:url" content="http://hkirito.github.io/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Sanwu">
+<meta property="og:description" content="kafka基础应用学习笔记 kafka：一种非常流行的消息中间件人话：可以用这个框架解决消息在服务间传递的格式化及速度等问题，那么为什么要这么做呢？答：因为快，而且方便。  解释kafka中的专业术语（个人理解）123456789Producer：消息的生产者，消息从生产者传递至kafka处理 （做饭的）Consumer：消息的消费者，把消息从kafka中拿出（吃饭的）Consumer Group">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://hkirito.github.io/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image.png">
+<meta property="og:image" content="http://hkirito.github.io/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image_1.png">
+<meta property="article:published_time" content="2021-07-14T12:09:48.000Z">
+<meta property="article:modified_time" content="2021-07-14T12:10:33.198Z">
+<meta property="article:author" content="Sanwu">
+<meta property="article:tag" content="NetWork">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hkirito.github.io/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image.png">
+
+
+<link rel="canonical" href="http://hkirito.github.io/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://hkirito.github.io/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/","path":"2021/07/14/kafka基础应用学习笔记/","title":"kafka基础应用学习笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>kafka基础应用学习笔记 | Sanwu</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Sanwu</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">kafka基础应用学习笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8Akafka%E4%B8%AD%E7%9A%84%E4%B8%93%E4%B8%9A%E6%9C%AF%E8%AF%AD%EF%BC%88%E4%B8%AA%E4%BA%BA%E7%90%86%E8%A7%A3%EF%BC%89"><span class="nav-number">1.0.1.</span> <span class="nav-text">解释kafka中的专业术语（个人理解）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%AD%E5%BB%BAkafka"><span class="nav-number">1.0.2.</span> <span class="nav-text">搭建kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">1.0.3.</span> <span class="nav-text">一些基本操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%EF%BC%9A"><span class="nav-number">1.0.4.</span> <span class="nav-text">注意事项：</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sanwu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Hkirito" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Hkirito" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          kafka基础应用学习笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2021-07-14 20:09:48 / Modified: 20:10:33" itemprop="dateCreated datePublished" datetime="2021-07-14T20:09:48+08:00">2021-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Software/" itemprop="url" rel="index"><span itemprop="name">Software</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="kafka基础应用学习笔记"><a href="#kafka基础应用学习笔记" class="headerlink" title="kafka基础应用学习笔记"></a>kafka基础应用学习笔记</h1><blockquote>
+<p>kafka：一种非常流行的消息中间件<br>人话：可以用这个框架解决消息在服务间传递的格式化及速度等问题，那么为什么要这么做呢？<br>答：因为快，而且方便。</p>
+</blockquote>
+<h3 id="解释kafka中的专业术语（个人理解）"><a href="#解释kafka中的专业术语（个人理解）" class="headerlink" title="解释kafka中的专业术语（个人理解）"></a>解释kafka中的专业术语（个人理解）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Producer：消息的生产者，消息从生产者传递至kafka处理 （做饭的）</span><br><span class="line"></span><br><span class="line">Consumer：消息的消费者，把消息从kafka中拿出（吃饭的）</span><br><span class="line"></span><br><span class="line">Consumer Group：消费者群组，就是把消费者们进行划分合并（吃饭排一个队的）</span><br><span class="line"></span><br><span class="line">Topic：标签，个人将其理解为一个标识，具有相同标识的生产者和消费者之间进行联系，读取特定的数据（打饭的窗口）</span><br><span class="line"></span><br><span class="line">Broker： kafka集群中包含的服务器节点（食堂）</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="搭建kafka"><a href="#搭建kafka" class="headerlink" title="搭建kafka"></a>搭建kafka</h3><p>可选择官网tgz包下载或直接docker搭建</p>
+<p><a target="_blank" rel="noopener" href="https://archive.apache.org/dist/kafka/">https://archive.apache.org/dist/kafka/</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kafka启动需要zookeeper组件</span><br><span class="line">tgz包版：</span><br><span class="line">  <span class="variable">$root</span>&gt;<span class="built_in">cd</span> kafka_X.XX-X.X.X</span><br><span class="line">  <span class="variable">$root</span>&gt;bin/zookeeper-server-start.sh config/zookeeper.properties</span><br><span class="line">  </span><br><span class="line">然后启动kafkaserver</span><br><span class="line">  <span class="variable">$root</span>&gt;bin/kafka-server-start.sh config/server.properties</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>docker版：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$root</span>&gt;docker pull zookeeper </span><br><span class="line"><span class="variable">$root</span>&gt;docker run -it -p2888:2888 -p2181:2181 --name=zookeeper zookeeper</span><br><span class="line"></span><br><span class="line"><span class="comment">#到这步就是启动了zookeeper</span></span><br><span class="line"><span class="comment">#下面就是使用kafka链接zookeeper，可使用宿主机（前提是有java环境「使用java --version查看」）</span></span><br><span class="line"><span class="variable">$root</span>&gt; curl -O -L https://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.6.0/kafka_2.12-2.6.0.tgz</span><br><span class="line"><span class="variable">$root</span>&gt;tar -zxvf kafka_2.12-2.6.0.tgz</span><br><span class="line"><span class="variable">$root</span>&gt;<span class="built_in">cd</span> kafka_2.12-2.6.0/</span><br><span class="line"><span class="variable">$root</span>&gt;bin/kafka-server-start.sh config/server.properties</span><br></pre></td></tr></table></figure>
+
+
+<p>利用了别人的镜像，避免重复造轮子（当然我喜欢自己造轮子所以我用的tgz ）</p>
+<h3 id="一些基本操作"><a href="#一些基本操作" class="headerlink" title="一些基本操作"></a>一些基本操作</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建topic</span></span><br><span class="line">&gt;bin/kafka-topics.sh --create --zookeeper 【zookeeper server:port】 --replication-factor 1 --partitions 1 --topic 【topic name】</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看本机的topic</span></span><br><span class="line">&gt;bin/kafka-topics.sh --zookeeper 【zookeeper server:port】 --list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用生产者身份连接kafka,这里会打开一个终端，向kafka中发送消息</span></span><br><span class="line">&gt;bin/kafka-console-producer.sh --broker-list 【zookeeper server:port】 --topic 【topic name】</span><br><span class="line">&gt;hello world</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用消费者身份连接kafka，这里同样会打开一个终端，获取kafka中的信息</span></span><br><span class="line">&gt;bin/kafka-console-consumer.sh --bootstrap-server 【zookeeper server:port】 --topic 【topic name】 --from-beginning</span><br><span class="line">hello world </span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除topic（先把kafka和zookeeper停了再操作）</span></span><br><span class="line">&gt;bin/kafka-topics --delete --zookeeper 【zookeeper server:port】 --topic 【topic name】</span><br><span class="line"><span class="comment">#然后删除topic的存储目录（server.properties文件log.dirs配置）“默认为/tmp/kafka-logs的topic相关目录”即可，查询显示还有的话，就重启一下将信息更新即可</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># PS：说一下几个可能碰到的问题，</span></span><br><span class="line"><span class="comment"># 1.“唉，为啥我在虚拟机里面（docker里面）启动的kafka为啥局域网内拿python连不上啊？”</span></span><br><span class="line">答：“因为这玩意默认是本地localhost运行的，你要在config/server.properties内修改配置（看下图）“</span><br><span class="line"><span class="comment"># 2.&quot;唉，为啥我的kafka链接不了zookeeper啊？&quot;</span></span><br><span class="line">答：“你看下你的zookeeper启动在哪里，然后在config/server.properties内修改配置（同样看下图）”</span><br><span class="line"><span class="comment"># 3.&quot;md,sb博主，为啥我的topic删除不了？骗子！？？&quot;</span></span><br><span class="line">答：“你需要配置auto.create.topics.enable = <span class="literal">false</span>和delete.topic.enable=<span class="literal">true</span>” </span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image.png" alt="配置1"></p>
+<p><img src="/2021/07/14/kafka%E5%9F%BA%E7%A1%80%E5%BA%94%E7%94%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image_1.png" alt="配置2"></p>
+<p>贴上我自己测试的python链接脚本，先启动消费者然后启动生产者</p>
+<p>Producer.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> KafkaProducer</span><br><span class="line"><span class="keyword">from</span> kafka.errors <span class="keyword">import</span> kafka_errors</span><br><span class="line"></span><br><span class="line">producer = KafkaProducer(</span><br><span class="line">    bootstrap_servers=[<span class="string">&#x27;zookeeper_server:port&#x27;</span>],</span><br><span class="line">    key_serializer=<span class="keyword">lambda</span> k: json.dumps(k).encode(),</span><br><span class="line">    value_serializer=<span class="keyword">lambda</span> v: json.dumps(v).encode())</span><br><span class="line"><span class="built_in">print</span> (producer.config)</span><br><span class="line">msg_dict = &#123;</span><br><span class="line">    <span class="string">&quot;sleep_time&quot;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&quot;db_config&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;database&quot;</span>: <span class="string">&quot;test_1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;host&quot;</span>: <span class="string">&quot;xxxx&quot;</span>,</span><br><span class="line">        <span class="string">&quot;user&quot;</span>: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">        <span class="string">&quot;password&quot;</span>: <span class="string">&quot;root&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;table&quot;</span>: <span class="string">&quot;msg&quot;</span>,</span><br><span class="line">    <span class="string">&quot;msg&quot;</span>: <span class="string">&quot;Hello World&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">msg2_dict = <span class="string">&quot;hahahahhahaha&quot;</span></span><br><span class="line"></span><br><span class="line">msg = json.dumps(msg_dict)</span><br><span class="line">futruer = producer.send(<span class="string">&quot;kafka_demo&quot;</span>, key=<span class="string">&#x27;count_num&#x27;</span>, value=msg_dict, partition=<span class="literal">None</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">   futruer.get(timeout=<span class="number">20</span>)</span><br><span class="line"><span class="keyword">except</span> kafka_errors: <span class="comment"># 发送失败抛出kafka_errors</span></span><br><span class="line">    traceback.format_exc()</span><br></pre></td></tr></table></figure>
+
+
+<p>Consumer.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> KafkaConsumer</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer_demo</span>():</span></span><br><span class="line">    consumer = KafkaConsumer(</span><br><span class="line">        <span class="string">&#x27;kafka_demo&#x27;</span>,</span><br><span class="line">        bootstrap_servers=<span class="string">&#x27;zookeeper_server:port&#x27;</span>,</span><br><span class="line">        group_id=<span class="string">&#x27;hahaha&#x27;</span></span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">for</span> message <span class="keyword">in</span> consumer:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;receive, key: &#123;&#125;, value: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">            json.loads(message.key.decode()),</span><br><span class="line">            json.loads(message.value.decode())</span><br><span class="line">            )</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">consumer_demo()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/07/05/Spring-Data-Commons%E8%BF%9C%E7%A8%8BRCE-CVE-2018-1273/" rel="prev" title="Spring Data Commons远程RCE(CVE-2018-1273)">
+                  <i class="fa fa-chevron-left"></i> Spring Data Commons远程RCE(CVE-2018-1273)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/07/17/%E5%8C%BA%E5%9D%97%E9%93%BE%E5%88%9D%E6%8E%A2-%E5%B0%9D%E8%AF%95%E7%BC%96%E5%86%99%E5%90%88%E7%BA%A6/" rel="next" title="区块链初探-尝试编写合约">
+                  区块链初探-尝试编写合约 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sanwu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

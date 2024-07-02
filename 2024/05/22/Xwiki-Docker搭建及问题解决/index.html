@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hkirito.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="Xwiki-Docker搭建及问题解决首先是明确你要搭建的版本，因为不同的版本对应的docker版本不同，而且官方的镜像也不一定完全契合，我先展示下现版本： XWiki 14 ~ 14.10.21Xwiki 15 ~ 15.10.9Xwiki 16 ~ 16.3.1 每个版本都有不同的组件，一般有 1234version-postgres-tomcatversion-mysql-tomcatver">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Xwiki-Docker搭建及问题解决">
+<meta property="og:url" content="http://hkirito.github.io/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/index.html">
+<meta property="og:site_name" content="Sanwu">
+<meta property="og:description" content="Xwiki-Docker搭建及问题解决首先是明确你要搭建的版本，因为不同的版本对应的docker版本不同，而且官方的镜像也不一定完全契合，我先展示下现版本： XWiki 14 ~ 14.10.21Xwiki 15 ~ 15.10.9Xwiki 16 ~ 16.3.1 每个版本都有不同的组件，一般有 1234version-postgres-tomcatversion-mysql-tomcatver">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-22T06:11:26.000Z">
+<meta property="article:modified_time" content="2024-05-22T06:42:20.807Z">
+<meta property="article:author" content="Sanwu">
+<meta property="article:tag" content="NetWork">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://hkirito.github.io/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://hkirito.github.io/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/","path":"2024/05/22/Xwiki-Docker搭建及问题解决/","title":"Xwiki-Docker搭建及问题解决"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Xwiki-Docker搭建及问题解决 | Sanwu</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Sanwu</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="nav-number">1.</span> <span class="nav-text">Xwiki-Docker搭建及问题解决</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Xwiki-Docker%E6%96%87%E4%BB%B6"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. Xwiki-Docker文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%90%AD%E5%BB%BAXwiki-Docker"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 搭建Xwiki-Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="nav-number">1.0.3.</span> <span class="nav-text">3. 问题解决</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sanwu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Hkirito" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Hkirito" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Xwiki-Docker搭建及问题解决
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-05-22 14:11:26 / Modified: 14:42:20" itemprop="dateCreated datePublished" datetime="2024-05-22T14:11:26+08:00">2024-05-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Software/" itemprop="url" rel="index"><span itemprop="name">Software</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="Xwiki-Docker搭建及问题解决"><a href="#Xwiki-Docker搭建及问题解决" class="headerlink" title="Xwiki-Docker搭建及问题解决"></a>Xwiki-Docker搭建及问题解决</h1><p>首先是明确你要搭建的版本，因为不同的版本对应的docker版本不同，而且官方的镜像也不一定完全契合，我先展示下现版本：</p>
+<p>XWiki 14 ~ 14.10.21<br>Xwiki 15 ~ 15.10.9<br>Xwiki 16 ~ 16.3.1</p>
+<p>每个版本都有不同的组件，一般有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">version-postgres-tomcat</span><br><span class="line">version-mysql-tomcat</span><br><span class="line">version-mariadb-tomcat</span><br><span class="line">lts-postgres-tomcat</span><br></pre></td></tr></table></figure>
+<p>区别其实在于其db不同，以及对应的tomcat版本不一样，这里坑比较大，希望各位注意一下</p>
+<p><code>1. 其中14对应支持的mysql的版本虽说已经更新到8.3，但是我在搭建过程中依然存在问题，实测版本可以改为5.7.44或5.7的其他版本</code><br><code>2. 版本15，16版本都支持mysql8.3，但是实测会存在部分问题，Its版本一般是最新版本的更新，追求安全的可以无脑拉取</code></p>
+<h3 id="1-Xwiki-Docker文件"><a href="#1-Xwiki-Docker文件" class="headerlink" title="1. Xwiki-Docker文件"></a>1. Xwiki-Docker文件</h3><p>准备文件：<code>docker-compose.yml</code>; <code>init.sql</code>;<code>.env</code><br>不同版本的docker-compose.yml文件几乎一致，不同的是<code>.env</code>文件<br><code>.env</code>文件中包含你需要设置的基本信息</p>
+<ol>
+<li><p><code>.env</code>文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Default environment values</span></span><br><span class="line"><span class="string">XWIKI_VERSION=14.10.18</span></span><br><span class="line"><span class="string">DB_USER=xwiki</span></span><br><span class="line"><span class="string">DB_PASSWORD=xwiki</span></span><br><span class="line"><span class="string">DB_DATABASE=xwiki</span></span><br><span class="line"><span class="string">MYSQL_ROOT_PASSWORD=xwiki</span></span><br></pre></td></tr></table></figure>
+<p>这个文件中包含你想安装的版本信息和数据库连接密码，重点注意版本号，版本号建议去hub.docker.com搜索是否存在你写的版本号，这个关系拉取的web镜像版本</p>
+</li>
+<li><p><code>docker-compose.yml</code>文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;2&#x27;</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">bridge:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;xwiki:$&#123;XWIKI_VERSION&#125;-mysql-tomcat&quot;</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">xwiki-mysql-tomcat-web</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_USER=xwiki</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_PASSWORD=xwiki</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_HOST=xwiki-mysql-db</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">xwiki-data:/usr/local/xwiki</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">bridge</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;mysql:5.7.44&quot;</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">xwiki-mysql-db</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysql-data:/var/lib/mysql</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./init.sql:/docker-entrypoint-initdb.d/init.sql</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_ROOT_PASSWORD=$&#123;MYSQL_ROOT_PASSWORD&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_USER=$&#123;DB_USER&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_PASSWORD=$&#123;DB_PASSWORD&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_DATABASE=$&#123;DB_DATABASE&#125;</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--character-set-server=utf8mb4&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--collation-server=utf8mb4_bin&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--explicit-defaults-for-timestamp=1&quot;</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">bridge</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">mysql-data:</span> &#123;&#125;</span><br><span class="line">  <span class="attr">xwiki-data:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的配置文件为官方推荐</p>
+</li>
+<li><p><code>init.sql</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">grant</span> <span class="keyword">all</span> privileges <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> xwiki@<span class="string">&#x27;%&#x27;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-搭建Xwiki-Docker"><a href="#2-搭建Xwiki-Docker" class="headerlink" title="2. 搭建Xwiki-Docker"></a>2. 搭建Xwiki-Docker</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+<p>如果没问题你可以使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+<p>查看正在运行的docker container容器状态，如果均为up状态即搭建完成</p>
+<h3 id="3-问题解决"><a href="#3-问题解决" class="headerlink" title="3. 问题解决"></a>3. 问题解决</h3><p>如果出现</p>
+<ol>
+<li><p>出现web容器错误</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Setting environment variables</span><br><span class="line">Deploying XWiki <span class="keyword">in</span> the <span class="string">&#x27;ROOT&#x27;</span> context</span><br><span class="line">Replacing environment variables <span class="keyword">in</span> files</span><br><span class="line">Setting permanent directory...</span><br><span class="line">Configure libreoffice...</span><br><span class="line">Saving config file hibernate.cfg.xml...</span><br><span class="line">Saving config file xwiki.cfg...</span><br><span class="line">Saving config file xwiki.properties...</span><br><span class="line">Cannot find /usr/<span class="built_in">local</span>/tomcat/bin/setclasspath.sh</span><br><span class="line">This file is needed to run this program</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在catalina.sh脚本中，导致问题的部分如下：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -r <span class="string">&quot;<span class="variable">$CATALINA_HOME</span>&quot;</span>/bin/setclasspath.sh ]; <span class="keyword">then</span></span><br><span class="line">    . <span class="string">&quot;<span class="variable">$CATALINA_HOME</span>&quot;</span>/bin/setclasspath.sh</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Cannot find <span class="variable">$CATALINA_HOME</span>/bin/setclasspath.sh&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;This file is needed to run this program&quot;</span></span><br></pre></td></tr></table></figure>
+A1：可以尝试使用docker –privileged启动容器<br>A2：更新 runc &gt;= 1.0.0-rc93<br>下载地址：<a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/releases/">https://github.com/opencontainers/runc/releases/</a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">whereis runc  </span><br><span class="line">mv /usr/bin/runc /usr/bin/runc.bak   <span class="comment">#备份原runc文件</span></span><br><span class="line"><span class="built_in">cd</span> /data/make/runc/</span><br><span class="line">cp runc  /usr/bin/runc </span><br><span class="line">systemctl restart docker </span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>出现db容器错误<br> 当出现database数据版本不匹配，redo语句应不为空</p>
+<p> A1:是因为多次尝试其他版本导致overlay层修改，在目录卷中新指定要挂载的目录即可，就是将docker-compose.yml中的mysql-data重新指定一个卷，即可解决</p>
+ <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">  <span class="attr">volumes:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">mysql-data:/var/lib/mysql</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/22/%E5%89%81%E6%A4%92%E8%92%B8%E9%B8%A1/" rel="prev" title="剁椒蒸鸡">
+                  <i class="fa fa-chevron-left"></i> 剁椒蒸鸡
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/" rel="next" title="关于AI大模型中的LangChain ReAct框架的学习和使用">
+                  关于AI大模型中的LangChain ReAct框架的学习和使用 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sanwu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

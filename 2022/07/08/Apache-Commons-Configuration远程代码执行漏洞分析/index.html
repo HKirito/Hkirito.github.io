@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hkirito.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="漏洞原理org.apache.commons:commons-configuration2中，形如形如 ${prefix:name} 的字符串可以被解析，当 interpolate 操作的字符串可控时，漏洞即可以被利用在2.4版本及以上至2.8.0版本时，支持的列表有这几种 漏洞复现 跟进interpolate函数  获取传入的${script:XXX}继续跟进resolveSingleVaria">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Commons Configuration远程代码执行漏洞分析">
+<meta property="og:url" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Sanwu">
+<meta property="og:description" content="漏洞原理org.apache.commons:commons-configuration2中，形如形如 ${prefix:name} 的字符串可以被解析，当 interpolate 操作的字符串可控时，漏洞即可以被利用在2.4版本及以上至2.8.0版本时，支持的列表有这几种 漏洞复现 跟进interpolate函数  获取传入的${script:XXX}继续跟进resolveSingleVaria">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/exp__MpXKcNDjB.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_GRbDxLVUBo.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_resolve_wOH1V3cyq5.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_resolve%E5%86%85_5xyrdvdNIl.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_fetchlookup_cN24JqPLbm.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/lookup_HhNoukhadf.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/stringlookup_VbdkPCeOI9.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/-2.4_D6Z_AF2kwi.png">
+<meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image__cFwDtMgzC.png">
+<meta property="article:published_time" content="2022-07-08T02:36:31.000Z">
+<meta property="article:modified_time" content="2024-03-29T06:55:18.188Z">
+<meta property="article:author" content="Sanwu">
+<meta property="article:tag" content="NetWork">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/exp__MpXKcNDjB.png">
+
+
+<link rel="canonical" href="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/","path":"2022/07/08/Apache-Commons-Configuration远程代码执行漏洞分析/","title":"Apache Commons Configuration远程代码执行漏洞分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Apache Commons Configuration远程代码执行漏洞分析 | Sanwu</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Sanwu</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">漏洞原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">漏洞复现</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sanwu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Hkirito" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Hkirito" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Apache Commons Configuration远程代码执行漏洞分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-07-08 10:36:31" itemprop="dateCreated datePublished" datetime="2022-07-08T10:36:31+08:00">2022-07-08</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2024-03-29 14:55:18" itemprop="dateModified" datetime="2024-03-29T14:55:18+08:00">2024-03-29</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Network-Safety/" itemprop="url" rel="index"><span itemprop="name">Network-Safety</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h3><p>org.apache.commons:commons-configuration2中，形如形如 ${prefix:name} 的字符串可以被解析，当 interpolate 操作的字符串可控时，漏洞即可以被利用<br>在2.4版本及以上至2.8.0版本时，支持的列表有这几种</p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/exp__MpXKcNDjB.png" alt="exp"></p>
+<p>跟进interpolate函数</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_GRbDxLVUBo.png" alt="interpolate"></p>
+<p>获取传入的${script:XXX}<br>继续跟进resolveSingleVariable时</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_resolve_wOH1V3cyq5.png" alt="resolve_out"></p>
+<p>跟进resolve解析strValue</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_resolve%E5%86%85_5xyrdvdNIl.png" alt="resolve_in"></p>
+<p>获取prefixPos及后面的name传入FetchLookupForPrefix</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_fetchlookup_cN24JqPLbm.png" alt="FetchLookup"></p>
+<p>进入nullsafeLookup获取符合name的实体类</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/lookup_HhNoukhadf.png" alt="nullsafeLookup"></p>
+<p>lookup寻找逻辑如图</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/stringlookup_VbdkPCeOI9.png" alt="lookup"></p>
+<p>key不为空且key.length=2还需要符合keys的format<br>所以很容易构造</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;script:nashorn:java.lang.Runtime.getRuntime().exec(<span class="string">&#x27;XXX&#x27;</span>)&#125;`</span><br></pre></td></tr></table></figure>
+
+<p>触发完毕</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/-2.4_D6Z_AF2kwi.png" alt="fail"></p>
+<p>2.4之前时获取的value并不是从nullsafeLookup的StringLookup这个方法获取的，而是DummyLookup的Object Lookup。也就无法找到对应的实体类，无法触发。</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image__cFwDtMgzC.png" alt="fail2"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/06/21/Docker%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E7%99%BD%E7%9A%AE%E4%B9%A6%E5%8F%8A%E5%AF%B9%E5%BA%94%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" rel="prev" title="Docker容器安全最佳实践白皮书及对应修复方法">
+                  <i class="fa fa-chevron-left"></i> Docker容器安全最佳实践白皮书及对应修复方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/29/BurpGPT-Burp%E7%9A%84AI%E6%8F%92%E4%BB%B6/" rel="next" title="BurpGPT-Burp的AI插件">
+                  BurpGPT-Burp的AI插件 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sanwu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

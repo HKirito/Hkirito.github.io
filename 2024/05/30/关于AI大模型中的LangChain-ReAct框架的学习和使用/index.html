@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hkirito.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="LangChain ReactReAct是Reasoning and Acting（也有一说是Reason Act）缩写，意思是LLM可以根据逻辑推理（Reason），构建完整系列行动（Act），从而达成期望目标。ReAct方式的作用就是协调LLM模型和外部的信息获取，与其他功能交互。如果说LLM模型是大脑，那ReAct框架就是这个大脑的手脚和五官。同时具备帮助LLM模型获取信息、输出内容与执行决">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于AI大模型中的LangChain ReAct框架的学习和使用">
+<meta property="og:url" content="http://hkirito.github.io/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Sanwu">
+<meta property="og:description" content="LangChain ReactReAct是Reasoning and Acting（也有一说是Reason Act）缩写，意思是LLM可以根据逻辑推理（Reason），构建完整系列行动（Act），从而达成期望目标。ReAct方式的作用就是协调LLM模型和外部的信息获取，与其他功能交互。如果说LLM模型是大脑，那ReAct框架就是这个大脑的手脚和五官。同时具备帮助LLM模型获取信息、输出内容与执行决">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://hkirito.github.io/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/LangChain_ReAct2.png">
+<meta property="article:published_time" content="2024-05-30T08:10:43.000Z">
+<meta property="article:modified_time" content="2024-05-30T08:21:46.885Z">
+<meta property="article:author" content="Sanwu">
+<meta property="article:tag" content="NetWork">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hkirito.github.io/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/LangChain_ReAct2.png">
+
+
+<link rel="canonical" href="http://hkirito.github.io/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://hkirito.github.io/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/","path":"2024/05/30/关于AI大模型中的LangChain-ReAct框架的学习和使用/","title":"关于AI大模型中的LangChain ReAct框架的学习和使用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>关于AI大模型中的LangChain ReAct框架的学习和使用 | Sanwu</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Sanwu</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LangChain-React"><span class="nav-number">1.</span> <span class="nav-text">LangChain React</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ReAct%E6%98%AFReasoning-and-Acting%EF%BC%88%E4%B9%9F%E6%9C%89%E4%B8%80%E8%AF%B4%E6%98%AFReason-Act%EF%BC%89%E7%BC%A9%E5%86%99%EF%BC%8C%E6%84%8F%E6%80%9D%E6%98%AFLLM%E5%8F%AF%E4%BB%A5%E6%A0%B9%E6%8D%AE%E9%80%BB%E8%BE%91%E6%8E%A8%E7%90%86%EF%BC%88Reason%EF%BC%89%EF%BC%8C%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E7%B3%BB%E5%88%97%E8%A1%8C%E5%8A%A8%EF%BC%88Act%EF%BC%89%EF%BC%8C%E4%BB%8E%E8%80%8C%E8%BE%BE%E6%88%90%E6%9C%9F%E6%9C%9B%E7%9B%AE%E6%A0%87%E3%80%82"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">ReAct是Reasoning and Acting（也有一说是Reason Act）缩写，意思是LLM可以根据逻辑推理（Reason），构建完整系列行动（Act），从而达成期望目标。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">实际应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7api"><span class="nav-number">2.1.</span> <span class="nav-text">申请api</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sanwu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Hkirito" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Hkirito" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于AI大模型中的LangChain ReAct框架的学习和使用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-05-30 16:10:43 / Modified: 16:21:46" itemprop="dateCreated datePublished" datetime="2024-05-30T16:10:43+08:00">2024-05-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="LangChain-React"><a href="#LangChain-React" class="headerlink" title="LangChain React"></a>LangChain React</h1><h4 id="ReAct是Reasoning-and-Acting（也有一说是Reason-Act）缩写，意思是LLM可以根据逻辑推理（Reason），构建完整系列行动（Act），从而达成期望目标。"><a href="#ReAct是Reasoning-and-Acting（也有一说是Reason-Act）缩写，意思是LLM可以根据逻辑推理（Reason），构建完整系列行动（Act），从而达成期望目标。" class="headerlink" title="ReAct是Reasoning and Acting（也有一说是Reason Act）缩写，意思是LLM可以根据逻辑推理（Reason），构建完整系列行动（Act），从而达成期望目标。"></a>ReAct是Reasoning and Acting（也有一说是Reason Act）缩写，意思是LLM可以根据逻辑推理（Reason），构建完整系列行动（Act），从而达成期望目标。</h4><p><code>ReAct方式的作用就是协调LLM模型和外部的信息获取，与其他功能交互。如果说LLM模型是大脑，那ReAct框架就是这个大脑的手脚和五官。同时具备帮助LLM模型获取信息、输出内容与执行决策的能力。</code>对于一个指定的任务目标，ReAct框架会自动补齐LLM应该具备的知识和相关信息，然后再让LLM模型做出决策，并执行LLM的决策。</p>
+<p>一个ReAct流程里，关键是三个概念：</p>
+<ul>
+<li><p><code>Thought</code>：由LLM模型生成，是LLM产生行为和依据。可以根据LLM的思考，来衡量他要采取的行为是否合理。这是一个可用来判断本次决策是否合理的关键依据。相较于人类，thought的存在可以让LLM的决策变得更加有可解释性和可信度。</p>
+</li>
+<li><p><code>Act</code>：Act是指LLM判断本次需要执行的具体行为。Act一般由两部分组成：行为和对象。用编程的说法就是API名称和对应的入参。LLM模型最大的优势是，可以根据Thought的判断，选择需要使用的API并生成需要填入API的参数。从而保证了ReAct框架在执行层面的可行性。</p>
+</li>
+<li><p><code>Obs</code>：LLM框架对于外界输入的获取。它就像LLM的五官，将外界的反馈信息同步给LLM模型，协助LLM模型进一步的做分析或者决策。</p>
+</li>
+</ul>
+<p>一个完整的ReAct的行为，包涵以下几个流程：</p>
+<ul>
+<li><p>1.输入目标：任务的起点。可以是用户的手动输入，也可以是依靠触发器（比如系统故障报警）。</p>
+</li>
+<li><p>2.LOOP：LLM模型开始分析问题需要的步骤（Thought），按步骤执行Act，根据观察到的信息（Obs），循环执行这个过程。直到判断任务目标达成。</p>
+</li>
+<li><p>3.Finish：任务最终执行成功，返回最终结果。</p>
+</li>
+</ul>
+<p>简单的ReAct示例</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">You are an assistant, please fully understand the user<span class="string">&#x27;s question, choose the appropriate tool, and help the user solve the problem step by step.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### CONSTRAINTS ####</span></span><br><span class="line"><span class="string">1. The tool selected must be one of the tools in the tool list.</span></span><br><span class="line"><span class="string">2. When unable to find the input for the tool, please adjust immediately and use the AskHumanHelpTool to ask the user for additional parameters.</span></span><br><span class="line"><span class="string">3. When you believe that you have the final answer and can respond to the user, please use the TaskCompleteTool.</span></span><br><span class="line"><span class="string">5. You must response in Chinese;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### Tool List ###</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[</span></span><br><span class="line"><span class="string">    Search: 如果需要搜索请用它.paramDescription ： [&#123;&quot;name&quot;: &quot;searchKey&quot;, &quot;description&quot;: &quot;搜索参数&quot;,&quot;type&quot;:&quot;String&quot;&#125;]</span></span><br><span class="line"><span class="string">    AskHumanHelpTool: 如果需要人类帮助，请使用它。paramDescription ： [&#123;&quot;name&quot;: &quot;question&quot;, &quot;description&quot;: &quot;问题&quot;,&quot;type&quot;:&quot;String&quot;&#125;]</span></span><br><span class="line"><span class="string">    TaskCompleteTool：如果你认为你已经有了最终答案，请使用它。paramDescription ： [&#123;&quot;name&quot;: &quot;answer&quot;, &quot;description&quot;: &quot;答案&quot;,&quot;type&quot;:&quot;String&quot;&#125;]</span></span><br><span class="line"><span class="string">]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">You should only respond in JSON format as described below</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### RESPONSE FORMAT ###</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  &#123;&quot;thought&quot;: &quot;为什么选择这个工具的思考&quot;,&quot;tool_names&quot;: &quot;工具名&quot;,&quot;args_list&quot;: &#123;“工具名1”:&#123;&quot;参数名1&quot;: &quot;参数值1&quot;,&quot;参数名2&quot;: &quot;参数值2&quot;&#125;&#125;&#125;&#125;</span></span><br><span class="line"><span class="string">Make sure that the response content you return is all in JSON format and does not contain any extra content.</span></span><br></pre></td></tr></table></figure>
+
+<p>把它复制粘贴到ChatGPT中，就可以感受一下最初级的ReAct交互的体验。读者自己充当一个ReAct框架，去执行Act和Obs过程。</p>
+<h1 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h1><h2 id="申请api"><a href="#申请api" class="headerlink" title="申请api"></a>申请api</h2><p>K1.申请通义千问的api，去阿里云控制台申请</p>
+<p><a target="_blank" rel="noopener" href="https://dashscope.console.aliyun.com/apiKey">https://dashscope.console.aliyun.com/apiKey</a></p>
+<p>K2.申请了APIkey也得去申请模型试用服务，不然无法正常调用model</p>
+<p>然后编写代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.tools <span class="keyword">import</span> BaseTool</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> initialize_agent</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> AgentType</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> langchain</span><br><span class="line"><span class="keyword">from</span> langchain_community.llms <span class="keyword">import</span> Tongyi</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> langchain_core.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"><span class="keyword">import</span> dashscope</span><br><span class="line"><span class="keyword">from</span> langchain.prompts <span class="keyword">import</span> PromptTemplate</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> initialize_agent, AgentType, Tool</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> LLMMathChain</span><br><span class="line"><span class="keyword">from</span> langchain_community.utilities <span class="keyword">import</span> SerpAPIWrapper</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">os.environ[<span class="string">&quot;DASHSCOPE_API_KEY&quot;</span>] = <span class="string">&#x27;sk-XXX&#x27;</span></span><br><span class="line">llm = Tongyi(model=<span class="string">&quot;qwen-plus&quot;</span>)</span><br><span class="line"><span class="comment"># 默认model是qwen-plus</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 自定义工具</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Multiply</span>(<span class="params">BaseTool</span>):</span></span><br><span class="line">    name = <span class="string">&quot;乘法&quot;</span></span><br><span class="line">    description = <span class="string">&quot;只做乘法运算&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_run</span>(<span class="params">self, <span class="built_in">input</span>: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">        <span class="comment"># 使用正则表达式匹配逗号或&quot;和&quot;分隔的数字</span></span><br><span class="line">        numbers_str = re.findall(<span class="string">r&#x27;\d+|和\d+&#x27;</span>, <span class="built_in">input</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将匹配到的字符串转换为数字列表</span></span><br><span class="line">        numbers = [<span class="built_in">int</span>(number.replace(<span class="string">&#x27;和&#x27;</span>, <span class="string">&#x27;&#x27;</span>)) <span class="keyword">for</span> number <span class="keyword">in</span> numbers_str]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 检查输入是否为空或只有一个元素</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(numbers) &lt; <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;请输入至少两个数字进行乘法运算&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算乘积</span></span><br><span class="line">        product = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> number <span class="keyword">in</span> numbers:</span><br><span class="line">            product *= number</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 返回结果</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;乘法计算完毕，结果是 <span class="subst">&#123;product&#125;</span>&quot;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_arun</span>(<span class="params">self, query: <span class="built_in">str</span></span>):</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError(<span class="string">&quot;This tool does not support async&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Add</span>(<span class="params">BaseTool</span>):</span></span><br><span class="line">    name = <span class="string">&quot;加法&quot;</span></span><br><span class="line">    description = <span class="string">&quot;只做加法运算&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_run</span>(<span class="params">self, <span class="built_in">input</span>: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">        <span class="comment"># 使用正则表达式匹配逗号或&quot;和&quot;分隔的数字</span></span><br><span class="line">        numbers_str = re.findall(<span class="string">r&#x27;\d+|和\d+&#x27;</span>, <span class="built_in">input</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将匹配到的字符串转换为数字列表</span></span><br><span class="line">        numbers = [<span class="built_in">int</span>(number.replace(<span class="string">&#x27;和&#x27;</span>, <span class="string">&#x27;&#x27;</span>)) <span class="keyword">for</span> number <span class="keyword">in</span> numbers_str]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 检查输入是否为空或只有一个元素</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(numbers) &lt; <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;请输入至少两个数字进行加法运算&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算乘积</span></span><br><span class="line">        product = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> number <span class="keyword">in</span> numbers:</span><br><span class="line">            product += number</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 返回结果</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;加法计算完毕，结果是 <span class="subst">&#123;product&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_arun</span>(<span class="params">self, query: <span class="built_in">str</span></span>):</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError(<span class="string">&quot;This tool does not support async&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Exponentiate</span>(<span class="params">BaseTool</span>):</span></span><br><span class="line">    name = <span class="string">&quot;幂运算&quot;</span></span><br><span class="line">    description = <span class="string">&quot;只做幂运算&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_run</span>(<span class="params">self, <span class="built_in">input</span>: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">_run</span>(<span class="params">self, <span class="built_in">input</span>: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">            <span class="comment"># 使用正则表达式匹配逗号或&quot;和&quot;分隔的数字</span></span><br><span class="line">            numbers_str = re.findall(<span class="string">r&#x27;\d+|和\d+&#x27;</span>, <span class="built_in">input</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 将匹配到的字符串转换为数字列表</span></span><br><span class="line">            numbers = [<span class="built_in">int</span>(number.replace(<span class="string">&#x27;和&#x27;</span>, <span class="string">&#x27;&#x27;</span>)) <span class="keyword">for</span> number <span class="keyword">in</span> numbers_str]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 检查输入是否为空</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> numbers:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&quot;请输入至少一个数字和它的指数进行幂运算&quot;</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 计算每个幂</span></span><br><span class="line">            powers = [base ** exp <span class="keyword">for</span> base, exp <span class="keyword">in</span> numbers]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 返回结果</span></span><br><span class="line">            result = <span class="string">&quot; * &quot;</span>.join(<span class="built_in">str</span>(power) <span class="keyword">for</span> power <span class="keyword">in</span> powers)</span><br><span class="line">            <span class="keyword">return</span> <span class="string">f&quot;幂运算计算完毕，结果是 <span class="subst">&#123;result&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_arun</span>(<span class="params">self, query: <span class="built_in">str</span></span>):</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError(<span class="string">&quot;This tool does not support async&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">tools = [Multiply(), Add(), Exponentiate()]</span><br><span class="line"></span><br><span class="line"><span class="comment"># agent = initialize_agent(tools, agent=AgentType.DEFAULT)</span></span><br><span class="line">agent = initialize_agent(tools,</span><br><span class="line">                         llm,</span><br><span class="line">                         verbose=<span class="literal">True</span>)</span><br><span class="line">agent(<span class="string">&quot;3乘以6,加上5的3次方再加上57，最后是多少?&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>导入需要编写的包，langchain，Tongyi等<br>K3:如果需要链接自定义大模型需要自己重写llm方法</p>
+<p>Class XXX(BassTool):<br>定义一个类，这个类继承BaseTool，需要实现_run方法，在_run方法中处理input输入</p>
+<p>工具类的意义是在于可以让大模型去使用工具，可以尝试交互，处理更多复杂问题。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">agent = initialize_agent(tools,</span><br><span class="line">                         llm,</span><br><span class="line">                         verbose=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>定义一个agent<br>它就是我们需要用到的整体的模型+工具集                      </p>
+<p>最后执行则会得到如下的执行链</p>
+<p><img src="/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/LangChain_ReAct2.png"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="prev" title="Xwiki-Docker搭建及问题解决">
+                  <i class="fa fa-chevron-left"></i> Xwiki-Docker搭建及问题解决
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/07/01/Langchain%E4%B8%ADReAct%E5%BC%80%E5%8F%91/" rel="next" title="Langchain中ReAct开发">
+                  Langchain中ReAct开发 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sanwu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
