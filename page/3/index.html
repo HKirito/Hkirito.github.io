@@ -128,7 +128,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -169,6 +169,109 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/" class="post-title-link" itemprop="url">EleasticSearch简单应用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2021-06-20 02:09:27 / Modified: 02:27:27" itemprop="dateCreated datePublished" datetime="2021-06-20T02:09:27+08:00">2021-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Software/" itemprop="url" rel="index"><span itemprop="name">Software</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="EleasticSearch"><a href="#EleasticSearch" class="headerlink" title="EleasticSearch"></a>EleasticSearch</h1><blockquote>
+<p>Elasticsearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java语言开发的，并作为Apache许可条款下的开放源码发布，是一种流行的企业级搜索引擎。</p>
+</blockquote>
+<p>在ElasticSearch中有四个相关的概念：</p>
+<ol>
+<li><p>索引 Index</p>
+</li>
+<li><p>类型 Type（7.X版本更新后被弃用）</p>
+</li>
+<li><p>文档 Documents</p>
+</li>
+<li><p>字段 Fields</p>
+</li>
+</ol>
+<p>我们可以将其类比到关系型数据库中，索引就是一个数据库，类型就是一张数据表，而文档就是数据表中的一行，字段就是数据表中的一列，如下图：</p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/640.png" alt="title"></p>
+<p>实际使用相关</p>
+<p>0x00创建</p>
+<p>创建索引使用PUT方式提交，路径为索引名称（名称必须为小写）</p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image.png" alt="index"></p>
+<p>创建Documents使用post方法在索引后连接”_doc”或”_create”来创建（后接字符为指定id，其中_create必须后接id）</p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_1.png" alt="doc"></p>
+<p>0x01查询</p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_2.png" alt="select"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_3.png" alt="select2"></p>
+<p>0x02更新</p>
+<p>对于全量更新，可使用PUT或POST，但是局部更新必须使用POST（返回的幂等性原理）</p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_4.png" alt="update"></p>
+<p><img src="/2021/06/20/EleasticSearch%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/image_5.png" alt="update2"></p>
+<p>删除将请求方法改为DELETE即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
