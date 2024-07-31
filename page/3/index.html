@@ -129,7 +129,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -170,6 +170,99 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/" class="post-title-link" itemprop="url">shiro漏洞及复现RCE利用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-06-20 19:18:13" itemprop="dateCreated datePublished" datetime="2021-06-20T19:18:13+08:00">2021-06-20</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2022-10-18 16:25:07" itemprop="dateModified" datetime="2022-10-18T16:25:07+08:00">2022-10-18</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Network-Safety/" itemprop="url" rel="index"><span itemprop="name">Network-Safety</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="shiro及漏洞复现"><a href="#shiro及漏洞复现" class="headerlink" title="shiro及漏洞复现"></a>shiro及漏洞复现</h1><p>首先了解漏洞原理及利用方式，漏洞CVE为</p>
+<h1 id="CVE-2016-4437"><a href="#CVE-2016-4437" class="headerlink" title="CVE-2016-4437"></a>CVE-2016-4437</h1><p>其次，在shiro内的序列化处理中，将rememberMe字段的数据未做处理校验，开始直接存储和反序列化操作。导致RCE及任意代码执行。</p>
+<p>准备：使用vulhub_app的shiro的docker环境，如下：</p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png" alt="环境"></p>
+<p>登录时的数据包及逻辑如下</p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png" alt="登录数据包"></p>
+<p>对于此字段rememberMe的反序列化利用链路如下：</p>
+<p>ysoserial将命令进行序列化，然后将此命令所在的机器使用JRMP来搭建远程加载使用类。将远程利用类执行命令进行AES及Base64加密的方式将命令加载生成Cookie，替换原有的rememberMe的cookie进行RCE。</p>
+<p>复现过程：</p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png" alt="复现"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png" alt="复现2"></p>
+<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png" alt="复现3"></p>
+<p>Tips：from Crypto.Cipher import AES导入报错时：pip install  crypto pycrypto pycryptodome</p>
+<p>仍报错时可进入到pip的site-package内将crypto重命名为Crypto即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 

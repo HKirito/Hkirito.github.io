@@ -129,7 +129,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -170,6 +170,106 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">Apache Commons Configuration远程代码执行漏洞分析</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-07-08 10:36:31" itemprop="dateCreated datePublished" datetime="2022-07-08T10:36:31+08:00">2022-07-08</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2024-03-29 14:55:18" itemprop="dateModified" datetime="2024-03-29T14:55:18+08:00">2024-03-29</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Network-Safety/" itemprop="url" rel="index"><span itemprop="name">Network-Safety</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h3><p>org.apache.commons:commons-configuration2中，形如形如 ${prefix:name} 的字符串可以被解析，当 interpolate 操作的字符串可控时，漏洞即可以被利用<br>在2.4版本及以上至2.8.0版本时，支持的列表有这几种</p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/exp__MpXKcNDjB.png" alt="exp"></p>
+<p>跟进interpolate函数</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_GRbDxLVUBo.png" alt="interpolate"></p>
+<p>获取传入的${script:XXX}<br>继续跟进resolveSingleVariable时</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_resolve_wOH1V3cyq5.png" alt="resolve_out"></p>
+<p>跟进resolve解析strValue</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_resolve%E5%86%85_5xyrdvdNIl.png" alt="resolve_in"></p>
+<p>获取prefixPos及后面的name传入FetchLookupForPrefix</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_fetchlookup_cN24JqPLbm.png" alt="FetchLookup"></p>
+<p>进入nullsafeLookup获取符合name的实体类</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/lookup_HhNoukhadf.png" alt="nullsafeLookup"></p>
+<p>lookup寻找逻辑如图</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/stringlookup_VbdkPCeOI9.png" alt="lookup"></p>
+<p>key不为空且key.length=2还需要符合keys的format<br>所以很容易构造</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;script:nashorn:java.lang.Runtime.getRuntime().exec(<span class="string">&#x27;XXX&#x27;</span>)&#125;`</span><br></pre></td></tr></table></figure>
+
+<p>触发完毕</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/-2.4_D6Z_AF2kwi.png" alt="fail"></p>
+<p>2.4之前时获取的value并不是从nullsafeLookup的StringLookup这个方法获取的，而是DummyLookup的Object Lookup。也就无法找到对应的实体类，无法触发。</p>
+<p><img src="/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image__cFwDtMgzC.png" alt="fail2"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1018,99 +1118,6 @@
 <p>6.将揉好的面团揪下一小段（大约一个大拇指左右）下入水中，依次下入。然后倒入煮过的黄花菜，海带，木耳。煮至水开</p>
 <p>7.下入切好的牛肉粒及豆皮，然后煮开，将静置好的洗面水倒出上面的部分清水，然后搅拌均匀，缓慢倒入锅中同时朝一个方向搅拌（倒入的洗面水的量根据锅中水的量为准，此步是为了做出糊糊的感觉，所以可以根据喜好进行添加）</p>
 <p>8.最后加入胡椒粉，生抽，蚝油及鸡精等调味料（个人风味添加）即可出锅。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sanwu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sanwu">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/" class="post-title-link" itemprop="url">shiro漏洞及复现RCE利用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-06-20 19:18:13" itemprop="dateCreated datePublished" datetime="2021-06-20T19:18:13+08:00">2021-06-20</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-10-18 16:25:07" itemprop="dateModified" datetime="2022-10-18T16:25:07+08:00">2022-10-18</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Network-Safety/" itemprop="url" rel="index"><span itemprop="name">Network-Safety</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="shiro及漏洞复现"><a href="#shiro及漏洞复现" class="headerlink" title="shiro及漏洞复现"></a>shiro及漏洞复现</h1><p>首先了解漏洞原理及利用方式，漏洞CVE为</p>
-<h1 id="CVE-2016-4437"><a href="#CVE-2016-4437" class="headerlink" title="CVE-2016-4437"></a>CVE-2016-4437</h1><p>其次，在shiro内的序列化处理中，将rememberMe字段的数据未做处理校验，开始直接存储和反序列化操作。导致RCE及任意代码执行。</p>
-<p>准备：使用vulhub_app的shiro的docker环境，如下：</p>
-<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image.png" alt="环境"></p>
-<p>登录时的数据包及逻辑如下</p>
-<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_1.png" alt="登录数据包"></p>
-<p>对于此字段rememberMe的反序列化利用链路如下：</p>
-<p>ysoserial将命令进行序列化，然后将此命令所在的机器使用JRMP来搭建远程加载使用类。将远程利用类执行命令进行AES及Base64加密的方式将命令加载生成Cookie，替换原有的rememberMe的cookie进行RCE。</p>
-<p>复现过程：</p>
-<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_2.png" alt="复现"></p>
-<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_3.png" alt="复现2"></p>
-<p><img src="/2021/06/20/shiro%E6%BC%8F%E6%B4%9E%E5%8F%8A%E5%A4%8D%E7%8E%B0RCE%E5%88%A9%E7%94%A8/image_4.png" alt="复现3"></p>
-<p>Tips：from Crypto.Cipher import AES导入报错时：pip install  crypto pycrypto pycryptodome</p>
-<p>仍报错时可进入到pip的site-package内将crypto重命名为Crypto即可。</p>
 
       
     </div>
