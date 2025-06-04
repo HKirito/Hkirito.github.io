@@ -129,7 +129,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -170,6 +170,100 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2024/03/29/BurpGPT-Burp%E7%9A%84AI%E6%8F%92%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/29/BurpGPT-Burp%E7%9A%84AI%E6%8F%92%E4%BB%B6/" class="post-title-link" itemprop="url">BurpGPT-Burp的AI插件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-03-29 10:59:36" itemprop="dateCreated datePublished" datetime="2024-03-29T10:59:36+08:00">2024-03-29</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2024-04-09 14:40:03" itemprop="dateModified" datetime="2024-04-09T14:40:03+08:00">2024-04-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Software/" itemprop="url" rel="index"><span itemprop="name">Software</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="BurpGPT-Burp的AI插件"><a href="#BurpGPT-Burp的AI插件" class="headerlink" title="BurpGPT-Burp的AI插件"></a>BurpGPT-Burp的AI插件</h1><p>BurpGPT：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/aress31/burpgpt/" title="https://github.com/aress31/burpgpt/">https://github.com/aress31/burpgpt/</a><br>burpgpt 利用人工智能的力量来检测传统扫描仪可能遗漏的安全漏洞。它将网络流量发送到用户指定的 OpenAI 模型，从而在被动扫描仪中实现复杂的分析。此扩展提供可自定义的提示，可以进行定制的网络流量分析，以满足每个用户的特定需求。查看示例用例部分以获得灵感。主要实现方式为调用OpenAI的API接口来使用自己定制Propmt的数据分析来寻找漏洞。</p>
+<h3 id="优势："><a href="#优势：" class="headerlink" title="优势："></a>优势：</h3><p>随时携带一个定制化的数据分析专家，对于TOP10或者一些容易遗漏的基础漏洞很能把握到。</p>
+<h3 id="劣势："><a href="#劣势：" class="headerlink" title="劣势："></a>劣势：</h3><p>目前还无法做到API多轮对话，对数据分析比较死板。</p>
+<p>原地址的burpgpt不更新了，导致对API调用出了些问题，修改了部分逻辑后我重构了一下原项目，截止目前（2024.02）还是能用的。<br><a target="_blank" rel="noopener" href="https://github.com/Hkirito/burpgpt/" title="https://github.com/Hkirito/burpgpt/">https://github.com/HKirito/burpgpt</a></p>
+<h3 id="使用截图："><a href="#使用截图：" class="headerlink" title="使用截图："></a>使用截图：</h3><p><img src="/2024/03/29/BurpGPT-Burp%E7%9A%84AI%E6%8F%92%E4%BB%B6/burpgpt.png" alt="burpgpt"></p>
+<p><img src="/2024/03/29/BurpGPT-Burp%E7%9A%84AI%E6%8F%92%E4%BB%B6/burpgpt-used.png" alt="burpgpt-used"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> GPTResponse <span class="title">getCompletions</span><span class="params">(GPTRequest gptRequest, String apiKey, String model, String prompt)</span></span></span><br><span class="line"><span class="function">      <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    gptRequest.setPrompt(prompt);</span><br><span class="line"></span><br><span class="line">    String apiEndpoint = <span class="string">&quot;https://api.openai.com/v1/chat/completions&quot;</span>;</span><br><span class="line">    MediaType JSON = MediaType.parse(<span class="string">&quot;application/json; charset=utf-8&quot;</span>);</span><br><span class="line">    JsonObject jsonObject = <span class="keyword">new</span> JsonObject();</span><br><span class="line"></span><br><span class="line">    String[] splitPrompt = gptRequest.getPrompt().split(<span class="string">&quot;-----&quot;</span>,<span class="number">2</span>);</span><br><span class="line">    String systemMessage = splitPrompt[<span class="number">0</span>];</span><br><span class="line">    String userMessage = splitPrompt[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    JsonArray messages = <span class="keyword">new</span> JsonArray();</span><br><span class="line">    JsonObject systemMessageObj = <span class="keyword">new</span> JsonObject();</span><br><span class="line">    systemMessageObj.addProperty(<span class="string">&quot;role&quot;</span>,<span class="string">&quot;system&quot;</span>);</span><br><span class="line">    systemMessageObj.addProperty(<span class="string">&quot;content&quot;</span>,systemMessage);</span><br><span class="line">    messages.add(systemMessageObj);</span><br><span class="line">    JsonObject userMessageObj = <span class="keyword">new</span> JsonObject();</span><br><span class="line">    userMessageObj.addProperty(<span class="string">&quot;role&quot;</span>,<span class="string">&quot;user&quot;</span>);</span><br><span class="line">    userMessageObj.addProperty(<span class="string">&quot;content&quot;</span>,userMessage);</span><br><span class="line">    messages.add(userMessageObj);</span><br><span class="line"></span><br><span class="line"><span class="comment">//    jsonObject.addProperty(&quot;prompt&quot;, gptRequest.getPrompt());</span></span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;max_tokens&quot;</span>, gptRequest.getMaxPromptSize());</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;n&quot;</span>, gptRequest.getN());</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;model&quot;</span>, model);</span><br><span class="line">    jsonObject.add(<span class="string">&quot;messages&quot;</span>,messages);</span><br><span class="line">    String jsonBody = gson.toJson(jsonObject);</span><br><span class="line"></span><br><span class="line">    RequestBody body = RequestBody.create(jsonBody, JSON);</span><br><span class="line">    Request request = <span class="keyword">new</span> Request.Builder()</span><br><span class="line">        .url(apiEndpoint)</span><br><span class="line">        .addHeader(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json&quot;</span>)</span><br><span class="line">        .addHeader(<span class="string">&quot;Authorization&quot;</span>, <span class="string">&quot;Bearer &quot;</span> + apiKey)</span><br><span class="line">        .post(body)</span><br><span class="line">        .build();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (MyBurpExtension.DEBUG) &#123;</span><br><span class="line">      <span class="comment">// Write the request body to a buffer</span></span><br><span class="line">      Buffer buffer = <span class="keyword">new</span> Buffer();</span><br><span class="line">      request.body().writeTo(buffer);</span><br><span class="line"></span><br><span class="line">      logging.logToOutput(<span class="string">&quot;[+] Completion request sent:&quot;</span>);</span><br><span class="line">      logging.logToOutput(String.format(<span class="string">&quot;- request: %s\n&quot;</span> +</span><br><span class="line">          <span class="string">&quot;- requestBody: %s&quot;</span>, request, buffer.readUtf8()));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> (Response response = client.newCall(request).execute()) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!response.isSuccessful()) &#123;</span><br><span class="line">        handleErrorResponse(response);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        String responseBody = response.body().string();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (MyBurpExtension.DEBUG) &#123;</span><br><span class="line">          logging.logToOutput(<span class="string">&quot;[+] Completion response received:&quot;</span>);</span><br><span class="line">          logging.logToOutput(String.format(<span class="string">&quot;- responseBody: %s&quot;</span>,</span><br><span class="line">              responseBody));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> gson.fromJson(responseBody, GPTResponse.class);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> IOException(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用“——-”分割了role角色的描述和预设propmt，所以在burp内预设角色和系统propmt的时候需要使用“——-”进行隔开。比如这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Please analyze the following HTTP request and response <span class="keyword">for</span> potential security vulnerabilities, specifically focusing on OWASP top <span class="number">10</span> vulnerabilities such as SQL injection, XSS, CSRF, and other common web application security threats.</span><br><span class="line"></span><br><span class="line">-----</span><br><span class="line"></span><br><span class="line">Format your response as a bullet list with each point listing a vulnerability name and a brief description, in the format:</span><br><span class="line">- Vulnerability Name: Brief description of vulnerability</span><br><span class="line"></span><br><span class="line">Exclude irrelevant information.</span><br><span class="line"></span><br><span class="line">=== Request ===</span><br><span class="line">&#123;REQUEST&#125;</span><br><span class="line"></span><br><span class="line">=== Response ===</span><br><span class="line">&#123;RESPONSE&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1054,88 +1148,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2021/07/04/%E8%83%A1%E8%BE%A3%E6%B1%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sanwu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sanwu">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/04/%E8%83%A1%E8%BE%A3%E6%B1%A4/" class="post-title-link" itemprop="url">胡辣汤</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2021-07-04 20:24:07 / Modified: 20:42:05" itemprop="dateCreated datePublished" datetime="2021-07-04T20:24:07+08:00">2021-07-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Cooking/" itemprop="url" rel="index"><span itemprop="name">Cooking</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="胡辣汤做法"><a href="#胡辣汤做法" class="headerlink" title="胡辣汤做法"></a>胡辣汤做法</h1><h4 id="原材料：面粉，黄花菜，海带，木耳，豆皮，牛肉粒，"><a href="#原材料：面粉，黄花菜，海带，木耳，豆皮，牛肉粒，" class="headerlink" title="原材料：面粉，黄花菜，海带，木耳，豆皮，牛肉粒，"></a>原材料：面粉，黄花菜，海带，木耳，豆皮，牛肉粒，</h4><h4 id="配料：葱姜蒜少许，八角香叶桂皮等。"><a href="#配料：葱姜蒜少许，八角香叶桂皮等。" class="headerlink" title="配料：葱姜蒜少许，八角香叶桂皮等。"></a>配料：葱姜蒜少许，八角香叶桂皮等。</h4><h4 id="前期准备："><a href="#前期准备：" class="headerlink" title="前期准备："></a>前期准备：</h4><p>1.先和面，面与水的比例为2:1</p>
-<p>待到三光（手光，盆光，面光）即可将面放置醒面（20分钟左右）</p>
-<p>2.将泡好的黄花菜，海带木耳和豆皮等清洗干净，均切成5-8cm的小段即可。</p>
-<p>3.将醒好的面再次揉至结实且均匀，即可开始加入凉水“洗面”（加水揉面至水浑白，将水倒至容器内放置备用，反复多次后至清洗的水不发白，面紧实为止）</p>
-<h4 id="开始制作："><a href="#开始制作：" class="headerlink" title="开始制作："></a>开始制作：</h4><p>4.将切好的黄花菜，海带木耳下水焯水约一分钟左右捞出。</p>
-<p>5.重新下油，将八角香叶桂皮等下锅炒出香味后捞出，加水和白葱碎煮至水烧开</p>
-<p>6.将揉好的面团揪下一小段（大约一个大拇指左右）下入水中，依次下入。然后倒入煮过的黄花菜，海带，木耳。煮至水开</p>
-<p>7.下入切好的牛肉粒及豆皮，然后煮开，将静置好的洗面水倒出上面的部分清水，然后搅拌均匀，缓慢倒入锅中同时朝一个方向搅拌（倒入的洗面水的量根据锅中水的量为准，此步是为了做出糊糊的感觉，所以可以根据喜好进行添加）</p>
-<p>8.最后加入胡椒粉，生抽，蚝油及鸡精等调味料（个人风味添加）即可出锅。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
@@ -1149,7 +1161,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2024</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
