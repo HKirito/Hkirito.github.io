@@ -129,7 +129,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -174,6 +174,186 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2026/03/24/Agents-MCP-Skill%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/24/Agents-MCP-Skill%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF/" class="post-title-link" itemprop="url">Agents/MCP/Skill的区别和适用场景</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-03-24 09:56:55 / Modified: 10:02:11" itemprop="dateCreated datePublished" datetime="2026-03-24T09:56:55+08:00">2026-03-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="Skill、MCP-与-Agent-的区别与协作"><a href="#Skill、MCP-与-Agent-的区别与协作" class="headerlink" title="Skill、MCP 与 Agent 的区别与协作"></a>Skill、MCP 与 Agent 的区别与协作</h1><p>在大模型（LLM）应用开发的快速演进中，我们经常听到 <strong>Skill</strong>、<strong>Agent</strong> 和 <strong>MCP</strong>。特别是随着 Claude Code 和各种 IDE 插件的普及，很多人对它们的界限感到模糊。</p>
+<p>本文将从物理架构、执行逻辑和适用场景三个维度，为你拆解这“三剑客”。</p>
+<hr>
+<h2 id="一、-核心定义：三者的角色定位"><a href="#一、-核心定义：三者的角色定位" class="headerlink" title="一、 核心定义：三者的角色定位"></a>一、 核心定义：三者的角色定位</h2><p>如果把 AI 辅助开发比作<strong>“工厂生产”</strong>，那么它们的分工如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">概念</th>
+<th align="left">角色</th>
+<th align="left">类比</th>
+<th align="left">载体示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Agent (智能体)</strong></td>
+<td align="left"><strong>主体 (工人)</strong></td>
+<td align="left">拥有大脑、能思考、能拆解任务的执行者。</td>
+<td align="left">Claude Code, Cursor, 自建 Agent 实例</td>
+</tr>
+<tr>
+<td align="left"><strong>Skill (技能包)</strong></td>
+<td align="left"><strong>灵魂 (手册)</strong></td>
+<td align="left">告诉工人“在什么场景下、按什么步骤、遵守什么规范”。</td>
+<td align="left"><code>SKILL.md</code>, <code>SOP.pdf</code>, <code>scripts/</code> 文件夹</td>
+</tr>
+<tr>
+<td align="left"><strong>MCP (通信协议)</strong></td>
+<td align="left"><strong>触手 (工具)</strong></td>
+<td align="left">让工人能插拔各种外部外设，连接本地文件或云端 API。</td>
+<td align="left">MCP Server (Rust/Node 编写的独立进程)</td>
+</tr>
+</tbody></table>
+<hr>
+<p>Agent和Skill及MCP的区别就简单一些，Agent作为调用和使用Skill和MCP的主体，它主要做的是规划任务，明确在什么时候调用什么skill，什么时候需要哪个MCP的数据。</p>
+<h2 id="二、-深度对峙：Skill-Bundle-vs-MCP"><a href="#二、-深度对峙：Skill-Bundle-vs-MCP" class="headerlink" title="二、 深度对峙：Skill (Bundle) vs MCP"></a>二、 深度对峙：Skill (Bundle) vs MCP</h2><p>你可能会问：<em>“我的 Skill 里已经包含了 <code>script/</code> 文件夹，能跑代码也能调接口，为什么还需要 MCP？”</em></p>
+<p>这是一个非常深刻的工程问题。它们的差异不在于“能不能跑代码”，而在于<strong>“代码在哪里跑”</strong>以及<strong>“谁能用这些代码”</strong>。</p>
+<h3 id="1-运行环境的“物理隔绝”"><a href="#1-运行环境的“物理隔绝”" class="headerlink" title="1. 运行环境的“物理隔绝”"></a>1. 运行环境的“物理隔绝”</h3><ul>
+<li><strong>Skill 模式</strong>：脚本由 Agent 直接在当前的 Shell 中启动。这意味着 Agent 必须拥有你电脑的直接访问权限，且你的电脑必须安装了脚本运行所需的各种环境（Python/Rust/Node）。</li>
+<li><strong>MCP 模式</strong>：代码在<strong>独立的 MCP Server 进程</strong>中运行。它像是一个“代理人”，Agent 只需要发送指令，Server 在自己的环境里处理完后再回传结果。这实现了更好的<strong>环境隔离</strong>。</li>
+</ul>
+<h3 id="2-“私有附件”-vs-“通用外设”"><a href="#2-“私有附件”-vs-“通用外设”" class="headerlink" title="2. “私有附件” vs “通用外设”"></a>2. “私有附件” vs “通用外设”</h3><ul>
+<li>**Skill (Bundle)**：通常是为特定工具（如 Claude Code）定制的。换一个平台，你可能需要重新适配文件夹结构。</li>
+<li><strong>MCP</strong>：它是一套<strong>行业标准协议</strong>。你写一个“K8s-MCP-Server”，无论是 IDE、Slack 机器人还是 Web 端网页，只要支持 MCP 协议，都能像插 USB 接口一样直接使用你的技能。</li>
+</ul>
+<h3 id="3-为什么-Skill-不能完全取代-MCP？（三个硬核场景）"><a href="#3-为什么-Skill-不能完全取代-MCP？（三个硬核场景）" class="headerlink" title="3.为什么 Skill 不能完全取代 MCP？（三个硬核场景）"></a>3.为什么 Skill 不能完全取代 MCP？（三个硬核场景）</h3><p>哪怕 SKILL.md 格式再通用，以下三个场景是它无法触达的，而 MCP 游刃有余：</p>
+<p>A. 跨语言/跨环境的隔离<br>如果你在 script/ 里放了一个 Python 脚本，你的电脑必须安装 Python 环境；如果是 Rust 脚本，得有 cargo。</p>
+<p>Skill 模式：Agent 运行你的脚本，如果环境不对，直接报错。</p>
+<p>MCP 模式：MCP Server 是一个独立进程。你可以把复杂的依赖（比如特定版本的 Node、甚至是一个 Docker 容器）封装在 Server 内部。Agent 不需要关心环境，它只需要跟 Server 说话。</p>
+<p>B. 持久化连接与状态（Stateful Service）<br>假设你要操作一个 Kubernetes 集群，需要频繁查询状态。</p>
+<p>Skill 模式：每次调用 script/ 里的脚本，都要重新初始化 kubeconfig、重新建立网络连接、重新握手。</p>
+<p>MCP 模式：MCP Server 运行起来后可以保持连接。它在后台持续监听 K8s 事件，Agent 问它时，它能秒级返回缓存好的状态。这比每次跑脚本快得多，也稳定得多。</p>
+<p>C. “非文件”来源的数据注入<br>这是 MCP 最强大的地方。有些数据并不存在于你的磁盘文件夹里（比如 Slack 实时消息、Google Calendar 议程、远程数据库）。</p>
+<p>Skill 模式：你必须写一个脚本去抓取，然后转换成文件。</p>
+<p>MCP 模式：MCP Server 直接作为数据源。Agent 可以在没有任何本地文件的情况下，直接通过 MCP 获取这些“上下文”。</p>
+<h3 id="4-为什么MCP不能取代Skill？"><a href="#4-为什么MCP不能取代Skill？" class="headerlink" title="4.为什么MCP不能取代Skill？"></a>4.为什么MCP不能取代Skill？</h3><p>简单来说：MCP 解决了“手”的问题，但它不负责“脑子”里的办事逻辑。 如果没有 Skill (SOP)，Agent 就会变成一个“拥有全能工具但不知道该怎么修车”的修理工。</p>
+<ol>
+<li>经验与逻辑的“非结构化”特性 (SOP vs API)<br>MCP 是结构化的 (API)：它定义的是 read_file(path) 或 list_pods()。它非常死板，必须有明确的输入和输出。</li>
+</ol>
+<p>Skill 是非结构化的 (SOP)：在 SKILL.md 中，你写的是：“如果 Rust 编译报生命周期错误，你应该先检查变量 A 的作用域，再尝试添加 ‘static 约束”。</p>
+<p>为什么不能取代：你很难把这种“模糊的排查思路”写成一个 MCP 接口。Skill 里的 Markdown 文档是给大模型“大脑”看的提示工程（Prompt Engineering），它赋予了 Agent 解决问题的“套路”。</p>
+<ol start="2">
+<li>动态调度与“按需加载” (Token 节省)<br>Skill 的优势：现在的 Skill 架构支持语义检索。当 Agent 面对 1000 个 Skill 时，它会根据你的指令（比如“修一下 K8s 网络”）只加载相关的 K8s_Networking_SKILL.md。</li>
+</ol>
+<p>MCP 的局限：MCP 暴露的是工具列表。如果所有逻辑都写在 MCP Server 里，Agent 每次都要从成百上千个 Tool 描述中去筛选。</p>
+<p>协作方式：Skill 作为索引层，告诉 Agent：“现在你需要去调用那个名为 k8s-operator 的 MCP 工具了”。</p>
+<ol start="3">
+<li>环境与约束 (Constraints)<br>Skill 负责“守规矩”：在 Skill 中你可以规定：“严禁在生产环境执行 delete 操作”，“回复用户时必须使用中文”。</li>
+</ol>
+<p>MCP 负责“干活”：MCP 只管执行。它不知道当前的上下文是否允许执行这个动作。</p>
+<p>结论：Skill 是 Policy（政策/规则），MCP 是 Mechanism（机制/能力）。在复杂的工程中，政策和机制必须分离。</p>
+<ol start="4">
+<li>低成本的“即兴发挥” (Agility)<br>Skill (Bundle)：你发现一个新的报错模式，只需要随手在 SKILL.md 里加一行话，Agent 马上就学会了。</li>
+</ol>
+<p>MCP：你需要修改 Rust/Node 源代码，重新编译 MCP Server 进程，重新部署。</p>
+<p>差异：Skill 是 “软编码”，修改成本极低；MCP 是 “硬编码”，适合沉淀那些极其稳定、通用的能力。</p>
+<hr>
+<h2 id="三、-协作流：它们是如何串联的？"><a href="#三、-协作流：它们是如何串联的？" class="headerlink" title="三、 协作流：它们是如何串联的？"></a>三、 协作流：它们是如何串联的？</h2><p>在实际的 DevOps 或开发场景中，这三者通常是<strong>“套娃式”</strong>配合的：</p>
+<ol>
+<li>**Agent (决策)**：接收到指令“修复集群中的 Pod 报错”。</li>
+<li>**Skill (逻辑引导)**：Agent 翻阅 <code>Rust_K8s_Fix_SKILL.md</code>，得知 SOP 是：先看日志 -&gt; 再查配置 -&gt; 最后尝试重启。</li>
+<li>**MCP (数据/操作)**：<ul>
+<li>Agent 通过 <strong>MCP</strong> 实时读取 K8s 日志（不是静态文件，是实时流）。</li>
+<li>Agent 发现配置错误，通过 <strong>MCP</strong> 操作本地文件系统进行修改。</li>
+<li>Agent 通过 <strong>MCP</strong> 向集群发送重启指令。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="四、-选型指南：我该用哪一个？"><a href="#四、-选型指南：我该用哪一个？" class="headerlink" title="四、 选型指南：我该用哪一个？"></a>四、 选型指南：我该用哪一个？</h2><h3 id="场景-1：定义团队规范与-SOP"><a href="#场景-1：定义团队规范与-SOP" class="headerlink" title="场景 1：定义团队规范与 SOP"></a>场景 1：定义团队规范与 SOP</h3><ul>
+<li><strong>选择</strong>：<strong>Skill (SKILL.md)</strong></li>
+<li><strong>理由</strong>：你需要的是“约束”和“引导”。在 <code>.md</code> 里写好 Prompt 规则，配合少量的辅助脚本即可。</li>
+</ul>
+<h3 id="2-场景-2：连接复杂、敏感的外部系统"><a href="#2-场景-2：连接复杂、敏感的外部系统" class="headerlink" title="2. 场景 2：连接复杂、敏感的外部系统"></a>2. 场景 2：连接复杂、敏感的外部系统</h3><ul>
+<li><strong>选择</strong>：<strong>MCP</strong></li>
+<li><strong>理由</strong>：涉及数据库连接、云端 API 调用或需要持久化状态（Stateful）的操作。MCP 能提供更安全的权限控制和更稳定的连接池管理。</li>
+</ul>
+<h3 id="3-场景-3：打造自动化闭环任务"><a href="#3-场景-3：打造自动化闭环任务" class="headerlink" title="3. 场景 3：打造自动化闭环任务"></a>3. 场景 3：打造自动化闭环任务</h3><ul>
+<li><strong>选择</strong>：<strong>Agent</strong></li>
+<li><strong>理由</strong>：当你需要一个能自动监控、自动思考并调用 Skill 和 MCP 的“数字员工”时，你需要构建一个 Agent 架构。</li>
+</ul>
+<hr>
+<h2 id="五、-总结"><a href="#五、-总结" class="headerlink" title="五、 总结"></a>五、 总结</h2><ul>
+<li><strong>Skill</strong> 解决了 <strong>“怎么做”</strong>（逻辑与范式）。</li>
+<li><strong>MCP</strong> 解决了 <strong>“连得上”</strong>（数据与接口）。</li>
+<li><strong>Agent</strong> 解决了 <strong>“谁来做”</strong>（思考与执行）。</li>
+</ul>
+<p>在 2026 年的开发中，最强的方案通常是：<strong>编写一套基于 MCP 标准的 Server 工具库，并为每个核心业务场景配上一份 <code>SKILL.md</code> 引导手册，最后交给 Agent 去统一调度。</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -641,7 +821,7 @@
 <li>例如我是aliyun域名，就可以在<a target="_blank" rel="noopener" href="https://dc.console.aliyun.com/">https://dc.console.aliyun.com/</a> 这个链接查看对应购买的域名，然后点击你的域名就可以看到你域名的基本信息了。</li>
 <li>其他域名可以对应操作意义一样操作。<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/Aliyun-dc.png" alt="Aliyun"><h3 id="1-CloudFlare"><a href="#1-CloudFlare" class="headerlink" title="1.CloudFlare"></a>1.CloudFlare</h3>当我们注册了CloudFlare账号后，登陆后，我们就可以进入账号首页，选择左边应用栏的网站，再点击右边的添加站点来转而用CloudFlare来托管我们的域名。<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dash-1.png" alt="CloudFlare"><br>点击后跳转到添加站点的页面，输入你的域名<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dash2.png" alt="CloudFlare"><br>点击继续后选择计划，计划这里下拉，找到最下面的Free计划，然后继续<br>点击继续<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dns1.png" alt="CloudFlare"><br>然后需要在激活那一步将需要你填的dns记录下来<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dns2.png" alt="CloudFlare"><br>然后回到你购买域名的托管方处，比如我就是aliyun，在<a target="_blank" rel="noopener" href="https://dc.console.aliyun.com/">https://dc.console.aliyun.com/</a> 这个链接选择左边的dns修改，将CloudFlare那边给你的两个记录全部填在aliyun的dns修改中，点击确认修改。等待一会，就能在CloudFlare中看到域名已经生效<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dns3.png" alt="CloudFlare"></li>
 </ol>
-<h3 id="2-电子邮件功能"><a href="#2-电子邮件功能" class="headerlink" title="2.电子邮件功能"></a>2.电子邮件功能</h3><p>当你拥有了域名后，就可以通过CloudFlare的电子邮件功能来将你的域名变成一个电子邮箱。<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-mail1.png" alt="mail"><br>点击启用电子邮件路由，然后转到路由规则的自定义规则下，就可以添加你自己想要接收邮件的邮箱了，比如你的域名是abc.com，那么你就可以添加一个<a href="mailto:&#97;&#97;&#x61;&#x40;&#97;&#98;&#x63;&#x2e;&#99;&#111;&#109;">&#97;&#97;&#x61;&#x40;&#97;&#98;&#x63;&#x2e;&#99;&#111;&#109;</a>的邮箱，然后在规则里设置send an email 然后在目的地址处填上你自己本来就有的邮箱。就可以将<a href="mailto:&#x61;&#x61;&#97;&#x40;&#97;&#98;&#99;&#x2e;&#99;&#x6f;&#x6d;">&#x61;&#x61;&#97;&#x40;&#97;&#98;&#99;&#x2e;&#99;&#x6f;&#x6d;</a>的邮件转发到你自己的邮箱了。这样的邮箱可以添加无数个。</p>
+<h3 id="2-电子邮件功能"><a href="#2-电子邮件功能" class="headerlink" title="2.电子邮件功能"></a>2.电子邮件功能</h3><p>当你拥有了域名后，就可以通过CloudFlare的电子邮件功能来将你的域名变成一个电子邮箱。<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-mail1.png" alt="mail"><br>点击启用电子邮件路由，然后转到路由规则的自定义规则下，就可以添加你自己想要接收邮件的邮箱了，比如你的域名是abc.com，那么你就可以添加一个<a href="mailto:&#97;&#97;&#x61;&#64;&#x61;&#x62;&#x63;&#46;&#x63;&#111;&#109;">&#97;&#97;&#x61;&#64;&#x61;&#x62;&#x63;&#46;&#x63;&#111;&#109;</a>的邮箱，然后在规则里设置send an email 然后在目的地址处填上你自己本来就有的邮箱。就可以将<a href="mailto:&#97;&#x61;&#x61;&#64;&#97;&#x62;&#99;&#x2e;&#x63;&#x6f;&#x6d;">&#97;&#x61;&#x61;&#64;&#97;&#x62;&#99;&#x2e;&#x63;&#x6f;&#x6d;</a>的邮件转发到你自己的邮箱了。这样的邮箱可以添加无数个。</p>
 <h2 id="2-白嫖一个docker加速服务"><a href="#2-白嫖一个docker加速服务" class="headerlink" title="2.白嫖一个docker加速服务"></a>2.白嫖一个docker加速服务</h2><p>当你拥有了一个域名后，就可以通过CloudFlare的功能来将你的域名变成一个Docker加速服务。<br>在主页中点击Workers and Pages 点击概述<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-docker1.png" alt="docker"><br>点击创建Worker，然后任意输入Worker的名字，然后点击创建<br>创建完成后，点击你创建好的Worker的名字，点击右上角的编辑代码<br>在编辑代码中，将代码替换成下面的代码，然后点击保存<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-docker2.png" alt="docker"><br>1.新建一个index.html文件</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>镜像使用说明<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-tag">body</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">font-family</span>: -apple-system, BlinkMacSystemFont, <span class="string">&quot;Segoe UI&quot;</span>, Roboto, <span class="string">&quot;Helvetica Neue&quot;</span>, Arial, sans-serif;</span></span><br><span class="line"><span class="css">      <span class="attribute">margin</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">background-color</span>: <span class="number">#f0f2f5</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="css">      <span class="attribute">flex-direction</span>: column;</span></span><br><span class="line"><span class="css">      <span class="attribute">min-height</span>: <span class="number">100vh</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.header</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">background</span>: <span class="built_in">linear-gradient</span>(<span class="number">90deg</span>, <span class="number">#4e54c8</span> <span class="number">0%</span>, <span class="number">#8f94fb</span> <span class="number">100%</span>);</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: white;</span></span><br><span class="line"><span class="css">      <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">20px</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.container</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">flex</span>: <span class="number">1</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="css">      <span class="attribute">justify-content</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">align-items</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">20px</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.content</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">background</span>: white;</span></span><br><span class="line"><span class="css">      <span class="attribute">border-radius</span>: <span class="number">8px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.1</span>);</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">20px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">max-width</span>: <span class="number">800px</span>; <span class="comment">/* 调整后的宽度 */</span></span></span><br><span class="line"><span class="css">      <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">font-size</span>: <span class="number">16px</span>; <span class="comment">/* 放大字体 */</span></span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.code-block</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">background</span>: <span class="number">#2d2d2d</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: <span class="number">#f8f8f2</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">border-radius</span>: <span class="number">8px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">margin</span>: <span class="number">10px</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">overflow-x</span>: auto;</span></span><br><span class="line"><span class="css">      <span class="attribute">font-family</span>: <span class="string">&quot;Courier New&quot;</span>, Courier, monospace; <span class="comment">/* 保持代码块的字体 */</span></span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.footer</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">background</span>: <span class="number">#444</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: white;</span></span><br><span class="line"><span class="css">      <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">5px</span> <span class="number">0</span>; <span class="comment">/* 调低高度 */</span></span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.footer</span> <span class="selector-tag">a</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: <span class="number">#4caf50</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">text-decoration</span>: none;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">600px</span>) &#123;</span></span><br><span class="line"><span class="css">      <span class="selector-class">.content</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="attribute">padding</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">font-size</span>: <span class="number">14px</span>; <span class="comment">/* 在小屏幕上稍微减小字体 */</span></span></span><br><span class="line"><span class="css">      &#125;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;header&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>镜像使用说明<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;content&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>要设置加速镜像服务，你可以执行下面命令：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;code-block&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pre</span>&gt;</span></span><br><span class="line">sudo tee /etc/docker/daemon.json <span class="symbol">&amp;lt;</span><span class="symbol">&amp;lt;</span>EOF</span><br><span class="line">&#123;</span><br><span class="line">	&quot;registry-mirrors&quot;: [&quot;https://docker.abc.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">        <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">p</span>&gt;</span>如果执行了上述命令，配置了镜像加速服务，可以直接 pull 镜像：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;code-block&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pre</span>&gt;</span></span><br><span class="line">docker pull halohub/halo:latest # 拉取 halo 镜像</span><br><span class="line">        <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">p</span>&gt;</span>因为Workers用量有限，在使用加速镜像服务时，你可以手动 pull 镜像然后 re-tag 之后 push 至本地镜像仓库:<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;code-block&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pre</span>&gt;</span></span><br><span class="line">docker pull docker.abc.com/halohub/halo:latest # 拉取 halo 镜像</span><br><span class="line">        <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Powered by Cloudflare Workers<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;https://www.xxoo.team&quot;</span>&gt;</span>www.abc.com<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>其中docker.abc.com需要修改为 XXX.你的域名 这个在你的docker加速中会填在daemon.json那个文件中。</p>
@@ -1072,111 +1252,6 @@ A1：可以尝试使用docker –privileged启动容器<br>A2：更新 runc &gt;
 <p> A1:是因为多次尝试其他版本导致overlay层修改，在目录卷中新指定要挂载的目录即可，就是将docker-compose.yml中的mysql-data重新指定一个卷，即可解决</p>
  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">  <span class="attr">volumes:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">mysql-data:/var/lib/mysql</span></span><br></pre></td></tr></table></figure></li>
 </ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2024/05/22/%E5%89%81%E6%A4%92%E8%92%B8%E9%B8%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sanwu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sanwu">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/05/22/%E5%89%81%E6%A4%92%E8%92%B8%E9%B8%A1/" class="post-title-link" itemprop="url">剁椒蒸鸡</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2024-05-22 13:58:17 / Modified: 14:09:53" itemprop="dateCreated datePublished" datetime="2024-05-22T13:58:17+08:00">2024-05-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Cooking/" itemprop="url" rel="index"><span itemprop="name">Cooking</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="剁椒蒸鸡"><a href="#剁椒蒸鸡" class="headerlink" title="剁椒蒸鸡"></a>剁椒蒸鸡</h1><h3 id="材料准备"><a href="#材料准备" class="headerlink" title="材料准备"></a>材料准备</h3><p>小的三黄鸡，鲜红辣椒，葱姜蒜，糖，盐，豆豉，剁椒</p>
-<h3 id="备菜"><a href="#备菜" class="headerlink" title="备菜"></a>备菜</h3><ul>
-<li>鸡肉洗净剁块，也可以不剁，去掉爪子，头，鸡屁股，改花刀，为了鸡肉能更入味。再次洗净剁块中带来的血水。</li>
-<li>葱姜蒜，鲜红椒切成碎，大小与剁椒差不多豆豉可切可不切，美观</li>
-</ul>
-<h3 id="烹饪"><a href="#烹饪" class="headerlink" title="烹饪"></a>烹饪</h3><ul>
-<li><ol>
-<li>锅烧热之后下入猪油，等待油热（大概手放置锅上方可感觉到热但不烫即可）</li>
-</ol>
-</li>
-<li><ol start="2">
-<li>依次下入剁椒，葱花，姜蒜，豆豉，鲜辣椒，炒香出香味</li>
-</ol>
-</li>
-<li><ol start="3">
-<li>转小火调味，加盐，糖调味，停火</li>
-</ol>
-</li>
-<li><ol start="4">
-<li>将鸡肉用厨房用纸把表面的水吸干，尽量吸干，不然会蒸的时候水和油会特别多</li>
-</ol>
-</li>
-<li><ol start="5">
-<li>鸡肉铺入盘底，上面浇炒好的剁椒，先静置腌十分钟（为了入味）</li>
-</ol>
-</li>
-<li><ol start="6">
-<li>大火烧开水，开水放入蒸10分钟，小块的话蒸5分钟左右即可出锅，可撒香葱，泼油出香味。</li>
-</ol>
-</li>
-</ul>
-<p><img src="/2024/05/22/%E5%89%81%E6%A4%92%E8%92%B8%E9%B8%A1/Chicken.jpg" alt="剁椒蒸鸡"></p>
 
       
     </div>
