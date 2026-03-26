@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hkirito.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness一直以来，AI开发工程从最开始的LLM训练，演化到Agent开发，到现在整个智能体架构的演进。 先来解释下这三者的定义和演化时间    阶段 时间 核心问题 局限性    Prompt Engineering 2023-2024 如何写好指令 复杂任务崩溃、无状态、无法处理私有知识   Context Enginee">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness">
+<meta property="og:url" content="http://hkirito.github.io/2026/03/26/AI%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E8%8C%83%E5%BC%8F%E6%BC%94%E8%BF%9B-Prompt-Context-Harness/index.html">
+<meta property="og:site_name" content="Sanwu">
+<meta property="og:description" content="AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness一直以来，AI开发工程从最开始的LLM训练，演化到Agent开发，到现在整个智能体架构的演进。 先来解释下这三者的定义和演化时间    阶段 时间 核心问题 局限性    Prompt Engineering 2023-2024 如何写好指令 复杂任务崩溃、无状态、无法处理私有知识   Context Enginee">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-03-26T02:56:01.000Z">
+<meta property="article:modified_time" content="2026-03-26T03:15:58.890Z">
+<meta property="article:author" content="Sanwu">
+<meta property="article:tag" content="NetWork">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://hkirito.github.io/2026/03/26/AI%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E8%8C%83%E5%BC%8F%E6%BC%94%E8%BF%9B-Prompt-Context-Harness/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://hkirito.github.io/2026/03/26/AI%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E8%8C%83%E5%BC%8F%E6%BC%94%E8%BF%9B-Prompt-Context-Harness/","path":"2026/03/26/AI开发工程范式演进-Prompt-Context-Harness/","title":"AI开发工程范式演进:Prompt->Context->Harness"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI开发工程范式演进:Prompt->Context->Harness | Sanwu</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Sanwu</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+        <li class="menu-item menu-item-link"><a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>Links</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AI%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E8%8C%83%E5%BC%8F%E6%BC%94%E8%BF%9B-Prompt-gt-Context-gt-Harness"><span class="nav-number">1.</span> <span class="nav-text">AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Prompt-Engineering"><span class="nav-number">1.1.</span> <span class="nav-text">1. Prompt Engineering</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Context-Engineering"><span class="nav-number">1.2.</span> <span class="nav-text">2. Context Engineering</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Harness-Engineering"><span class="nav-number">1.3.</span> <span class="nav-text">3. Harness Engineering</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E6%8A%80%E6%9C%AF%E7%BB%84%E4%BB%B6"><span class="nav-number">1.3.1.</span> <span class="nav-text">详细技术组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B%EF%BC%88Context-Engineering%EF%BC%89"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">1. 上下文工程（Context Engineering）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%9E%B6%E6%9E%84%E7%BA%A6%E6%9D%9F%EF%BC%88Architectural-Constraints%EF%BC%89"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">2. 架构约束（Architectural Constraints）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%8F%8D%E9%A6%88%E5%BE%AA%E7%8E%AF%EF%BC%88Feedback-Loops%EF%BC%89"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">3. 反馈循环（Feedback Loops）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E7%86%B5%E7%AE%A1%E7%90%86-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%88Entropy-Management%EF%BC%89"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">4. 熵管理&#x2F;垃圾回收（Entropy Management）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Harness-%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6%EF%BC%9A"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">Harness 设计哲学：</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sanwu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Hkirito" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Hkirito" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2026/03/26/AI%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E8%8C%83%E5%BC%8F%E6%BC%94%E8%BF%9B-Prompt-Context-Harness/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI开发工程范式演进:Prompt->Context->Harness
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-03-26 10:56:01 / Modified: 11:15:58" itemprop="dateCreated datePublished" datetime="2026-03-26T10:56:01+08:00">2026-03-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="AI开发工程范式演进-Prompt-gt-Context-gt-Harness"><a href="#AI开发工程范式演进-Prompt-gt-Context-gt-Harness" class="headerlink" title="AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness"></a>AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness</h1><p>一直以来，AI开发工程从最开始的LLM训练，演化到Agent开发，到现在整个智能体架构的演进。</p>
+<p>先来解释下这三者的定义和演化时间</p>
+<table>
+<thead>
+<tr>
+<th align="left">阶段</th>
+<th align="left">时间</th>
+<th align="left">核心问题</th>
+<th align="left">局限性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Prompt Engineering</strong></td>
+<td align="left">2023-2024</td>
+<td align="left">如何写好指令</td>
+<td align="left">复杂任务崩溃、无状态、无法处理私有知识</td>
+</tr>
+<tr>
+<td align="left"><strong>Context Engineering</strong></td>
+<td align="left">2025</td>
+<td align="left">给 AI 准备什么信息</td>
+<td align="left">上下文窗口扩大≠性能线性提升，Agent 仍会失控</td>
+</tr>
+<tr>
+<td align="left"><strong>Harness Engineering</strong></td>
+<td align="left">2026-至今</td>
+<td align="left">在什么环境里做事</td>
+<td align="left"><strong>解决可靠性问题</strong></td>
+</tr>
+</tbody></table>
+<h2 id="1-Prompt-Engineering"><a href="#1-Prompt-Engineering" class="headerlink" title="1. Prompt Engineering"></a>1. Prompt Engineering</h2><p>Prompt Engineering 是 LLM 训练的“术业有专攻”阶段，它主要解决如何写好指令的问题。也就是角色扮演和角色定位。这时候的大模型还只是可以扮演某个角色或角色组合，不能处理复杂任务。处理能力取决于大模型的训练数据集和模型本身。直到Langchain出现，CoT思维链和大模型的结合，才让大模型进入到了可以渐进式思考，可调用tools的状态。</p>
+<h2 id="2-Context-Engineering"><a href="#2-Context-Engineering" class="headerlink" title="2. Context Engineering"></a>2. Context Engineering</h2><p>Context Engineering 是在 Prompt Engineering 的基础上，给 AI 添加了上下文信息，使得 AI 可以处理复杂任务。这时候的模型已经可以处理复杂任务，但是上下文窗口扩大≠性能线性提升，Agent 还是会失控。上下文窗口只是解决了大模型知道了多少，但是这始终是有上限的，而且对于非Kimi模型的思考偏差之前，注意力和思考会随着上下文的增大而某些之前的关键字被稀释。造成对话开头和对话结尾的一些事物无法进行关联，尽管后面用动态上下文和滑动窗口进行扩展部分解决了这部分问题，但是在大Context情况下，还是会出现无法停止某些任务，即进入任务调用循环的情况，导致消耗掉无限的token。</p>
+<h2 id="3-Harness-Engineering"><a href="#3-Harness-Engineering" class="headerlink" title="3. Harness Engineering"></a>3. Harness Engineering</h2><p>Harness Engineering更像是一种开发范式规范，限制agent应该怎么做，做到什么样为止。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Harness Engineering                    │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  1. Context Engineering（上下文工程）                      │</span><br><span class="line">│     └── 持续更新的知识库 + 动态上下文（监控数据、浏览器导航）  │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  2. Architectural Constraints（架构约束）                  │</span><br><span class="line">│     └── 自定义 Linter + 结构测试（确定性强制执行）           │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  3. Garbage Collection（垃圾回收/熵管理）                  │</span><br><span class="line">│     └── 定期运行的清理 Agent，对抗文档不一致和架构漂移         │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<h3 id="详细技术组件"><a href="#详细技术组件" class="headerlink" title="详细技术组件"></a>详细技术组件</h3><h4 id="1-上下文工程（Context-Engineering）"><a href="#1-上下文工程（Context-Engineering）" class="headerlink" title="1. 上下文工程（Context Engineering）"></a>1. 上下文工程（Context Engineering）</h4><p>不仅仅是给 AI 喂数据，而是设计信息的”策展系统”：</p>
+<table>
+<thead>
+<tr>
+<th align="left">组件</th>
+<th align="left">功能</th>
+<th align="left">实现方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>渐进式披露</strong></td>
+<td align="left">解决上下文窗口限制</td>
+<td align="left">5阶段压缩：名称→描述→全文→附加文件→执行时加载</td>
+</tr>
+<tr>
+<td align="left"><strong>动态上下文</strong></td>
+<td align="left">实时获取必要信息</td>
+<td align="left">接入可观测性数据、浏览器导航、MCP 工具</td>
+</tr>
+<tr>
+<td align="left"><strong>记忆外部化</strong></td>
+<td align="left">跨会话保持状态</td>
+<td align="left">进度文件（progress files）、策略记忆（playbook）</td>
+</tr>
+<tr>
+<td align="left"><strong>工具注册表</strong></td>
+<td align="left">管理可用工具</td>
+<td align="left">MCP 工具延迟发现、专用处理器</td>
+</tr>
+</tbody></table>
+<p>实际案例：Claude Code 的 CLAUDE.md 或 OpenCode 的 AGENTS.md 文件，包含项目约定、目录结构、测试命令 。</p>
+<h4 id="2-架构约束（Architectural-Constraints）"><a href="#2-架构约束（Architectural-Constraints）" class="headerlink" title="2. 架构约束（Architectural Constraints）"></a>2. 架构约束（Architectural Constraints）</h4><p>用确定性规则约束 AI 行为，而非依赖模型自律：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">约束类型：</span><br><span class="line">├── 文件系统约束：限制访问目录（如禁止修改 node_modules）</span><br><span class="line">├── 代码规范约束：ESLint、Prettier、类型检查强制执行</span><br><span class="line">├── 变更范围约束：每个 PR 只能修改特定文件/模块</span><br><span class="line">├── 安全约束：危险命令检测、生产数据访问审批</span><br><span class="line">└── 结构测试：验证架构规则（如&quot;不允许跨层调用&quot;）</span><br></pre></td></tr></table></figure>
+
+<p>OpenAI 实践：为 Codex 设置”不能随意修改不相关代码”的硬性边界，违反即报错 。</p>
+<h4 id="3-反馈循环（Feedback-Loops）"><a href="#3-反馈循环（Feedback-Loops）" class="headerlink" title="3. 反馈循环（Feedback Loops）"></a>3. 反馈循环（Feedback Loops）</h4><p>让 AI 知道自己做得对不对，并自动修正：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">基础循环（写-测-修）：</span><br><span class="line">AI 生成代码 → 自动运行测试/Linter → 失败则反馈错误信息 → AI 修正 → 重试 → 成功则提交</span><br><span class="line"></span><br><span class="line">高级循环（PEV 模式）：</span><br><span class="line">Planner（生成计划）→ Executor（执行）→ Verifier（验证轨迹是否符合预期状态转移）</span><br><span class="line">                    ↑___________________________________________↓</span><br><span class="line">                    （发现差异则注入 refined constraint 回 Planner）</span><br></pre></td></tr></table></figure>
+<p>关键数据：同样模型，无 Harness 成功率 42%，加上适当系统环境后跳到 78% 。</p>
+<h4 id="4-熵管理-垃圾回收（Entropy-Management）"><a href="#4-熵管理-垃圾回收（Entropy-Management）" class="headerlink" title="4. 熵管理/垃圾回收（Entropy Management）"></a>4. 熵管理/垃圾回收（Entropy Management）</h4><p>对抗 AI 产生的技术债务：<br>定期清理 Agent：扫描文档不一致、架构违规、无用代码<br>影子模式评估：新配置与生产 Agent 并行测试，仅当超越基线才升级<br>版本控制：Harness 本身需要版本管理和 A/B 测试 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│                      Agent Harness 架构                        │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  用户消息 → 消息注入队列                                         │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  Prompt 组合引擎：按优先级组装模块化系统提示                      │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  工具注册表：分发到专用处理器（MCP 工具延迟发现）                  │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  安全系统：                                                     │</span><br><span class="line">│  ├── 审批层（Approval）                                        │</span><br><span class="line">│  ├── 危险命令检测                                               │</span><br><span class="line">│  ├── 钩子（Hooks）                                              │</span><br><span class="line">│  ├── 陈旧读取检测                                               │</span><br><span class="line">│  ├── 计划模式限制                                               │</span><br><span class="line">│  ├── 厄运循环检测（Doom Loop Detection）                         │</span><br><span class="line">│  ├── 迭代上限                                                   │</span><br><span class="line">│  └── 协作取消                                                   │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  上下文工程：5阶段渐进式压缩（内存压力时触发）                     │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  记忆与会话服务：                                                 │</span><br><span class="line">│  ├── 持久策略记忆（Playbook）                                    │</span><br><span class="line">│  ├── 会话存储                                                   │</span><br><span class="line">│  └── 每步撤销（Git 快照）                                        │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  子代理编排：生成隔离实例，过滤工具访问，并行探索                   │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  ┌─────────────────────────────────────────────────────┐   │</span><br><span class="line">│  │              ReAct 执行循环（6阶段）                    │   │</span><br><span class="line">│  │  预检查与压缩 → 思考 → 自我批判 → 行动 → 工具执行 → 后处理 │   │</span><br><span class="line">│  └─────────────────────────────────────────────────────┘   │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h4 id="Harness-设计哲学："><a href="#Harness-设计哲学：" class="headerlink" title="Harness 设计哲学："></a>Harness 设计哲学：</h4><p>“当 Agent 挣扎时，我们将其视为信号：识别缺失的内容——工具、防护栏、文档——并通过让 Codex 自己编写修复来反馈到仓库中。” </p>
+<hr>
+<p>对于开发者来说，我们应该学会的是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">设计环境 → 明确意图 → 构建反馈循环 → 审查输出</span><br></pre></td></tr></table></figure>
+<ol>
+<li>给AI一个项目，包含项目说明，新建中间执行md文件，要求AI在每一步修改都要追加写在中间执行md文件内，并要求说明为什么要这么改，原因是什么？这样才能让其他AI或中断后的AI重新读取执行md文件时能知道，项目进行到哪里了，为什么要这么改。</li>
+<li>描述项目的意图，要做什么？完成什么功能？最后要达到什么样为止？中途遇到什么情况停止？</li>
+<li>构建反馈循环，让AI自己修复代码，并给出修复后的代码。</li>
+<li>AI验收测试，确保代码符合要求。</li>
+<li>人工验收，做边缘测试，确保代码没有问题。</li>
+</ol>
+<p>这个概念最早应该是在claude和Cursor那个时期就出现的，只不过现在更倾向于做一个通用框架和逻辑开发范式的形式表达出来，这种在开发复杂项目和大型项目，多Agent开发中很适合。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/24/Agents-MCP-Skill%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF/" rel="prev" title="Agents/MCP/Skill的区别和适用场景">
+                  <i class="fa fa-chevron-left"></i> Agents/MCP/Skill的区别和适用场景
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sanwu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

