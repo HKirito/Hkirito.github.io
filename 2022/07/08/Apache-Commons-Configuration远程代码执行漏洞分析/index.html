@@ -20,12 +20,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"hkirito.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="漏洞原理org.apache.commons:commons-configuration2中，形如形如 ${prefix:name} 的字符串可以被解析，当 interpolate 操作的字符串可控时，漏洞即可以被利用在2.4版本及以上至2.8.0版本时，支持的列表有这几种 漏洞复现 跟进interpolate函数  获取传入的${script:XXX}继续跟进resolveSingleVaria">
+<meta name="description" content="Apache Commons Configuration远程代码执行漏洞分析复现">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apache Commons Configuration远程代码执行漏洞分析">
 <meta property="og:url" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Sanwu">
-<meta property="og:description" content="漏洞原理org.apache.commons:commons-configuration2中，形如形如 ${prefix:name} 的字符串可以被解析，当 interpolate 操作的字符串可控时，漏洞即可以被利用在2.4版本及以上至2.8.0版本时，支持的列表有这几种 漏洞复现 跟进interpolate函数  获取传入的${script:XXX}继续跟进resolveSingleVaria">
+<meta property="og:description" content="Apache Commons Configuration远程代码执行漏洞分析复现">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/exp__MpXKcNDjB.png">
 <meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/2.5_GRbDxLVUBo.png">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/-2.4_D6Z_AF2kwi.png">
 <meta property="og:image" content="http://hkirito.github.io/2022/07/08/Apache-Commons-Configuration%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image__cFwDtMgzC.png">
 <meta property="article:published_time" content="2022-07-08T02:36:31.000Z">
-<meta property="article:modified_time" content="2024-03-29T06:55:18.188Z">
+<meta property="article:modified_time" content="2026-03-26T09:18:35.227Z">
 <meta property="article:author" content="Sanwu">
 <meta property="article:tag" content="NetWork">
 <meta name="twitter:card" content="summary">
@@ -230,7 +230,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2024-03-29 14:55:18" itemprop="dateModified" datetime="2024-03-29T14:55:18+08:00">2024-03-29</time>
+        <time title="Modified: 2026-03-26 17:18:35" itemprop="dateModified" datetime="2026-03-26T17:18:35+08:00">2026-03-26</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -245,6 +245,7 @@
   
 </div>
 
+            <div class="post-description">Apache Commons Configuration远程代码执行漏洞分析复现</div>
         </div>
       </header>
 

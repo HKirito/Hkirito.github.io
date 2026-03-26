@@ -20,15 +20,15 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"hkirito.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="Skill、MCP 与 Agent 的区别与协作在大模型（LLM）应用开发的快速演进中，我们经常听到 Skill、Agent 和 MCP。特别是随着 Claude Code 和各种 IDE 插件的普及，很多人对它们的界限感到模糊。 本文将从物理架构、执行逻辑和适用场景三个维度，为你拆解这“三剑客”。  一、 核心定义：三者的角色定位如果把 AI 辅助开发比作“工厂生产”，那么它们的分工如下：">
+<meta name="description" content="Skill、MCP 与 Agent 的区别与协作，以及如何搭配使用，它们在场景中有什么样不同的侧重点">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Agents&#x2F;MCP&#x2F;Skill的区别和适用场景">
 <meta property="og:url" content="http://hkirito.github.io/2026/03/24/Agents-MCP-Skill%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF/index.html">
 <meta property="og:site_name" content="Sanwu">
-<meta property="og:description" content="Skill、MCP 与 Agent 的区别与协作在大模型（LLM）应用开发的快速演进中，我们经常听到 Skill、Agent 和 MCP。特别是随着 Claude Code 和各种 IDE 插件的普及，很多人对它们的界限感到模糊。 本文将从物理架构、执行逻辑和适用场景三个维度，为你拆解这“三剑客”。  一、 核心定义：三者的角色定位如果把 AI 辅助开发比作“工厂生产”，那么它们的分工如下：">
+<meta property="og:description" content="Skill、MCP 与 Agent 的区别与协作，以及如何搭配使用，它们在场景中有什么样不同的侧重点">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-03-24T01:56:55.000Z">
-<meta property="article:modified_time" content="2026-03-24T02:02:11.683Z">
+<meta property="article:modified_time" content="2026-03-26T09:16:52.503Z">
 <meta property="article:author" content="Sanwu">
 <meta property="article:tag" content="NetWork">
 <meta name="twitter:card" content="summary">
@@ -212,10 +212,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2026-03-24 09:56:55 / Modified: 10:02:11" itemprop="dateCreated datePublished" datetime="2026-03-24T09:56:55+08:00">2026-03-24</time>
+      <time title="Created: 2026-03-24 09:56:55" itemprop="dateCreated datePublished" datetime="2026-03-24T09:56:55+08:00">2026-03-24</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2026-03-26 17:16:52" itemprop="dateModified" datetime="2026-03-26T17:16:52+08:00">2026-03-26</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -229,6 +235,7 @@
   
 </div>
 
+            <div class="post-description">Skill、MCP 与 Agent 的区别与协作，以及如何搭配使用，它们在场景中有什么样不同的侧重点</div>
         </div>
       </header>
 
