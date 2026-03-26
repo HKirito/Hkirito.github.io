@@ -28,7 +28,7 @@
 <meta property="og:description" content="AI开发工程范式演进:Prompt-&gt;Context-&gt;Harness一直以来，AI开发工程从最开始的LLM训练，演化到Agent开发，到现在整个智能体架构的演进。 先来解释下这三者的定义和演化时间    阶段 时间 核心问题 局限性    Prompt Engineering 2023-2024 如何写好指令 复杂任务崩溃、无状态、无法处理私有知识   Context Enginee">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-03-26T02:56:01.000Z">
-<meta property="article:modified_time" content="2026-03-26T03:15:58.890Z">
+<meta property="article:modified_time" content="2026-03-26T03:20:08.057Z">
 <meta property="article:author" content="Sanwu">
 <meta property="article:tag" content="NetWork">
 <meta name="twitter:card" content="summary">
@@ -214,7 +214,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2026-03-26 10:56:01 / Modified: 11:15:58" itemprop="dateCreated datePublished" datetime="2026-03-26T10:56:01+08:00">2026-03-26</time>
+      <time title="Created: 2026-03-26 10:56:01 / Modified: 11:20:08" itemprop="dateCreated datePublished" datetime="2026-03-26T10:56:01+08:00">2026-03-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -266,9 +266,12 @@
 <td align="left"><strong>解决可靠性问题</strong></td>
 </tr>
 </tbody></table>
-<h2 id="1-Prompt-Engineering"><a href="#1-Prompt-Engineering" class="headerlink" title="1. Prompt Engineering"></a>1. Prompt Engineering</h2><p>Prompt Engineering 是 LLM 训练的“术业有专攻”阶段，它主要解决如何写好指令的问题。也就是角色扮演和角色定位。这时候的大模型还只是可以扮演某个角色或角色组合，不能处理复杂任务。处理能力取决于大模型的训练数据集和模型本身。直到Langchain出现，CoT思维链和大模型的结合，才让大模型进入到了可以渐进式思考，可调用tools的状态。</p>
-<h2 id="2-Context-Engineering"><a href="#2-Context-Engineering" class="headerlink" title="2. Context Engineering"></a>2. Context Engineering</h2><p>Context Engineering 是在 Prompt Engineering 的基础上，给 AI 添加了上下文信息，使得 AI 可以处理复杂任务。这时候的模型已经可以处理复杂任务，但是上下文窗口扩大≠性能线性提升，Agent 还是会失控。上下文窗口只是解决了大模型知道了多少，但是这始终是有上限的，而且对于非Kimi模型的思考偏差之前，注意力和思考会随着上下文的增大而某些之前的关键字被稀释。造成对话开头和对话结尾的一些事物无法进行关联，尽管后面用动态上下文和滑动窗口进行扩展部分解决了这部分问题，但是在大Context情况下，还是会出现无法停止某些任务，即进入任务调用循环的情况，导致消耗掉无限的token。</p>
-<h2 id="3-Harness-Engineering"><a href="#3-Harness-Engineering" class="headerlink" title="3. Harness Engineering"></a>3. Harness Engineering</h2><p>Harness Engineering更像是一种开发范式规范，限制agent应该怎么做，做到什么样为止。</p>
+<h2 id="1-Prompt-Engineering"><a href="#1-Prompt-Engineering" class="headerlink" title="1. Prompt Engineering"></a>1. Prompt Engineering</h2><pre><code>Prompt Engineering 是 LLM 训练的“术业有专攻”阶段，它主要解决如何写好指令的问题。也就是角色扮演和角色定位。这时候的大模型还只是可以扮演某个角色或角色组合，不能处理复杂任务。处理能力取决于大模型的训练数据集和模型本身。直到Langchain出现，CoT思维链和大模型的结合，才让大模型进入到了可以渐进式思考，可调用tools的状态。
+</code></pre>
+<h2 id="2-Context-Engineering"><a href="#2-Context-Engineering" class="headerlink" title="2. Context Engineering"></a>2. Context Engineering</h2><pre><code>Context Engineering 是在 Prompt Engineering 的基础上，给 AI 添加了上下文信息，使得 AI 可以处理复杂任务。这时候的模型已经可以处理复杂任务，但是上下文窗口扩大≠性能线性提升，Agent 还是会失控。上下文窗口只是解决了大模型知道了多少，但是这始终是有上限的，而且对于非Kimi模型的思考偏差之前，注意力和思考会随着上下文的增大而某些之前的关键字被稀释。造成对话开头和对话结尾的一些事物无法进行关联，尽管后面用动态上下文和滑动窗口进行扩展部分解决了这部分问题，但是在大Context情况下，还是会出现无法停止某些任务，即进入任务调用循环的情况，导致消耗掉无限的token。
+</code></pre>
+<h2 id="3-Harness-Engineering"><a href="#3-Harness-Engineering" class="headerlink" title="3. Harness Engineering"></a>3. Harness Engineering</h2><pre><code>Harness Engineering更像是一种开发范式规范，限制agent应该怎么做，做到什么样为止。
+</code></pre>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Harness Engineering                    │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  1. Context Engineering（上下文工程）                      │</span><br><span class="line">│     └── 持续更新的知识库 + 动态上下文（监控数据、浏览器导航）  │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  2. Architectural Constraints（架构约束）                  │</span><br><span class="line">│     └── 自定义 Linter + 结构测试（确定性强制执行）           │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  3. Garbage Collection（垃圾回收/熵管理）                  │</span><br><span class="line">│     └── 定期运行的清理 Agent，对抗文档不一致和架构漂移         │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
 <h3 id="详细技术组件"><a href="#详细技术组件" class="headerlink" title="详细技术组件"></a>详细技术组件</h3><h4 id="1-上下文工程（Context-Engineering）"><a href="#1-上下文工程（Context-Engineering）" class="headerlink" title="1. 上下文工程（Context Engineering）"></a>1. 上下文工程（Context Engineering）</h4><p>不仅仅是给 AI 喂数据，而是设计信息的”策展系统”：</p>
 <table>
